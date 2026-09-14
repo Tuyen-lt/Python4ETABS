@@ -42,6 +42,7 @@ eng = Engine(LiveSource())                     # LiveSource(pid=1234) to pick a 
 
 # Or an Excel export, no ETABS needed
 eng = Engine(ExcelSource("model_export.xlsx"))
+eng = Engine(ExcelSource(["model_export.xlsx", "Story.xlsx", "Joint Reaction.xlsx"]))   # several exports
 
 eng.ops()                                      # list operations, params, docs
 st = eng.run("stories")                        # DataFrame: Story, Height, Elevation
@@ -101,6 +102,20 @@ parse only the tables you need.
 
 `cases` / `combos` filter the `OutputCase` column. Results exist only for the cases/combos you exported.
 
+**Several files:** `ExcelSource([path1, path2, ...])` exposes the tables of all files as one source.
+- A results table (has `OutputCase`) found in several files is concatenated; later files are converted to the
+  units of the first file (`SourceError` if the units are incompatible). Use this to split large force exports by
+  combination.
+- Any other table found in several files (e.g. `Program Control`) comes from the first file in the list.
+- `source.table_files()` shows which files contain each table.
+
+**Precision:** ETABS writes values with the decimals set in its display format. An export shown with 0 decimals in
+kN gives reactions rounded to 1 kN (measured: max 0.5 kN difference against `LiveSource`). Increase the displayed
+decimals before exporting results you need precisely, or use `LiveSource`, which always reads in N-mm.
+
+**Case and combination names** are matched exactly: repeated spaces, `%`, `~`, `/`, `(`, `)` are significant
+(`"1_ULSE1   1.35D+1.5L"` is not `"1_ULSE1 1.35D+1.5L"`). Names passed as numbers are compared as strings.
+
 Tables required per operation:
 
 | Operation | Tables to export |
@@ -123,7 +138,9 @@ Exports contain the ETABS license number (`Program Control` sheet) and project d
 
 ### 5.2 LiveSource
 
-- Attaches through `connection.get_active_etabs(pid)`.
+- Attaches through `connection.get_active_etabs(pid)`. Without `pid` it uses the active ETABS instance; if ETABS
+  is not registered as active (common when a model was opened by double-clicking the .EDB), it tries every
+  running `ETABS.exe` process id and attaches to the first that answers. Pass `pid` when several ETABS are open.
 - Reads `DatabaseTables.GetTableForDisplayArray` with present units temporarily set to **N-mm** (display
   arrays are rounded to 2 decimals, so small units keep precision) and restores the previous units.
 - `cases` / `combos` set the tables' display selection (`SetLoadCasesSelectedForDisplay` /
@@ -204,7 +221,7 @@ All engine calls run on one worker thread; requests touching ETABS are serialize
 |---|---|---|---|
 | GET | `/ops` | - | `[{name, needs, slow, doc, params: [{name, default, required}]}]` |
 | POST | `/sources/live` | `{"pid": null}` | `{"source_id", "kind": "live"}` |
-| POST | `/sources/excel` | multipart `file` (.xlsx) | `{"source_id", "kind": "excel", "tables": [...]}` |
+| POST | `/sources/excel` | multipart `file` (.xlsx), repeat the field for several files (order = priority) | `{"source_id", "kind": "excel", "tables": [...]}` |
 | DELETE | `/sources/{source_id}` | - | `{"deleted": id}` |
 | POST | `/run/{op}` | `{"source_id", "params": {...}, "units": {"force": "kN", ...}}` | fast op: 200 `{"columns", "rows", "units"}` or `{"result"}`; slow op: 202 `{"job_id"}` |
 | GET | `/jobs/{job_id}` | - | `{"job_id", "op", "status": "queued/running/done/error", "done", "total", "message", "elapsed", "error"}` |

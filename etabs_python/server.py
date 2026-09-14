@@ -19,7 +19,7 @@ import uuid
 from concurrent.futures import Future
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import pandas as pd
 from fastapi import FastAPI, File, Request, UploadFile
@@ -37,7 +37,7 @@ from .units import Units
 
 JOB_TTL_SECONDS = 3600
 
-app = FastAPI(title="ETABS Core Engine", version="3.0.0",
+app = FastAPI(title="ETABS Core Engine", version="3.1.0",
               description="Run etabs_python operations on a live ETABS model or an ETABS Excel export.")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
@@ -172,14 +172,18 @@ def add_live_source(req: LiveRequest = LiveRequest()):
 
 
 @app.post("/sources/excel")
-def add_excel_source(file: UploadFile = File(...)):
-    """Upload an ETABS Excel export (.xlsx)."""
+def add_excel_source(file: List[UploadFile] = File(...)):
+    """Upload one or more ETABS Excel exports (.xlsx), repeating the multipart field 'file'. Order matters."""
     tmpdir = tempfile.mkdtemp(prefix="etabs_engine_")
-    path = Path(tmpdir) / (Path(file.filename or "export.xlsx").name or "export.xlsx")
-    with open(path, "wb") as f:
-        shutil.copyfileobj(file.file, f)
+    paths = []
+    for i, upload in enumerate(file):
+        name = Path(upload.filename or "export.xlsx").name or "export.xlsx"
+        path = Path(tmpdir) / f"{i:02d}_{name}"  # prefix keeps order and avoids name clashes
+        with open(path, "wb") as f:
+            shutil.copyfileobj(upload.file, f)
+        paths.append(path)
     try:
-        source = worker.call(lambda: ExcelSource(path))
+        source = worker.call(lambda: ExcelSource(paths))
     except Exception:
         shutil.rmtree(tmpdir, ignore_errors=True)
         raise

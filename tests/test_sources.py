@@ -43,6 +43,70 @@ def test_excel_source_missing_table_and_file(export_xlsx, tmp_path):
         ExcelSource(tmp_path / "missing.xlsx")
 
 
+def test_excel_source_reads_several_files(tmp_path):
+    from conftest import TABLES, write_export
+    stories = {k: TABLES[k] for k in ("Story Definitions", "Tower and Base Story Definitions")}
+    forces = {k: v for k, v in TABLES.items() if k not in stories}
+    a = write_export(tmp_path / "stories.xlsx", stories)
+    b = write_export(tmp_path / "forces.xlsx", forces)
+    src = ExcelSource([a, b])
+    assert set(src.tables()) == set(TABLES)
+    assert src.table("Story Definitions")["Story"].tolist() == ["FL2", "FL1"]
+    assert len(src.table("Element Forces - Beams", combos=["ULS1"])) == 14
+    src.close()
+
+
+def test_excel_source_first_file_wins_for_duplicate_tables(tmp_path):
+    from conftest import write_export
+    first = write_export(tmp_path / "a.xlsx", {"Story Definitions": (["Tower", "Name", "Height"], [None, None, "m"], [["T1", "A", 1]])})
+    second = write_export(tmp_path / "b.xlsx", {"Story Definitions": (["Tower", "Name", "Height"], [None, None, "m"], [["T1", "B", 2]])})
+    src = ExcelSource([first, second])
+    assert src.table("Story Definitions")["Story"].tolist() == ["A"]
+    assert src.table_files()["Story Definitions"] == [str(first), str(second)]
+
+
+def test_excel_source_concatenates_results_split_across_files(tmp_path):
+    from conftest import TABLES, write_export
+    headers, units, rows = TABLES["Element Forces - Beams"]
+    uls1 = write_export(tmp_path / "uls1.xlsx", {"Element Forces - Beams": (headers, units, [r for r in rows if r[3] == "ULS1"])})
+    uls2 = write_export(tmp_path / "uls2.xlsx", {"Element Forces - Beams": (headers, units, [r for r in rows if r[3] == "ULS2"])})
+    src = ExcelSource([uls1, uls2])
+    df = src.table("Element Forces - Beams")
+    assert len(df) == len(rows) and sorted(set(df["OutputCase"])) == ["ULS1", "ULS2"]
+    assert df.attrs["units"]["M3"] == "kN-m"
+    assert len(src.table("Element Forces - Beams", combos="ULS2")) == 9
+
+
+def test_excel_source_aligns_units_of_split_results(tmp_path):
+    from conftest import TABLES, write_export
+    headers, units, rows = TABLES["Element Forces - Beams"]
+    n_units = [u.replace("kN", "N") if u else u for u in units]
+    n_rows = [r[:6] + [v * 1000 for v in r[6:]] for r in rows if r[3] == "ULS2"]
+    kn = write_export(tmp_path / "kn.xlsx", {"Element Forces - Beams": (headers, units, [r for r in rows if r[3] == "ULS1"])})
+    n = write_export(tmp_path / "n.xlsx", {"Element Forces - Beams": (headers, n_units, n_rows)})
+    df = ExcelSource([kn, n]).table("Element Forces - Beams", combos="ULS2")
+    assert df["M3"].tolist() == [-float(s) for s in range(9)] and df.attrs["units"]["M3"] == "kN-m"
+    bad = write_export(tmp_path / "bad.xlsx", {"Element Forces - Beams": (headers, [u and "kg" for u in units], rows)})
+    with pytest.raises(SourceError):
+        ExcelSource([kn, bad]).table("Element Forces - Beams")
+
+
+SPECIAL_NAMES = ["1_ULSE1   1.35D+1.5L", "80% Wind Y_Eurocode_50y", "~LLRF", "2.SLS21 (LongTerm)", "A/B-C:D*E?", "1"]
+
+
+def test_case_names_with_special_characters(tmp_path):
+    from conftest import TABLES, write_export
+    headers, units, rows = TABLES["Joint Reactions"]
+    special_rows = [[r[0], r[1], r[2], name] + r[4:] for name in SPECIAL_NAMES for r in rows]
+    path = write_export(tmp_path / "special.xlsx", {"Joint Reactions": (headers, units, special_rows)})
+    src = ExcelSource(path)
+    assert src.table("Joint Reactions")["OutputCase"].tolist() == SPECIAL_NAMES
+    for name in SPECIAL_NAMES:
+        assert src.table("Joint Reactions", combos=[name])["OutputCase"].tolist() == [name]
+    assert src.table("Joint Reactions", cases=["1_ULSE1 1.35D+1.5L"]).empty  # exact match, spaces matter
+    assert len(src.table("Joint Reactions", combos=[1])) == 1                 # non-str names are compared as str
+
+
 def test_coerce_types_keeps_ids():
     df = coerce_types(pd.DataFrame({"Label": ["65"], "UniqueName": [83], "X": ["1.5"], "Shape": ["Rect"]}))
     assert df["Label"][0] == "65" and df["UniqueName"][0] == "83"

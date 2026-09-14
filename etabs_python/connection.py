@@ -4,8 +4,11 @@ COM connection to a running ETABS instance.
 Attaches from a dedicated MTA thread bound to the "Default" desktop (avoids desktop isolation
 issues on Windows) and provides model lock helpers and the connection exceptions.
 """
-from typing import Optional, Any
+from typing import Optional, Any, List
+import csv
 import ctypes
+import io
+import subprocess
 import threading
 import logging
 import pythoncom
@@ -24,11 +27,38 @@ class ModelLockedError(Exception):
     pass
 
 
+def etabs_process_ids() -> List[int]:
+    """Process ids of running ETABS.exe instances (Windows tasklist)."""
+    try:
+        out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq ETABS.exe", "/FO", "CSV", "/NH"],
+                             capture_output=True, text=True, timeout=10,
+                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)).stdout
+    except Exception as e:
+        logger.warning(f"Cannot list ETABS processes: {e}")
+        return []
+    return [int(row[1]) for row in csv.reader(io.StringIO(out)) if len(row) > 1 and row[1].isdigit()]
+
+
 def get_active_etabs(pid: Optional[int] = None) -> Any:
     """
     Attach to a running ETABS instance and return its SapModel.
-    If pid is given, attach to that process.
+    If pid is given, attach to that process. Otherwise use the active instance; when ETABS is not registered as
+    active (e.g. opened by double-clicking a model), try every running ETABS.exe process id.
     """
+    if pid is not None:
+        return _attach(pid)
+    try:
+        return _attach(None)
+    except EtabsConnectionError as first_error:
+        for process_id in etabs_process_ids():
+            try:
+                return _attach(process_id)
+            except EtabsConnectionError:
+                continue
+        raise first_error
+
+
+def _attach(pid: Optional[int]) -> Any:
     holder = [None, None]
     user32 = ctypes.windll.user32
     hDesk = user32.OpenDesktopW("Default", 0, False, 0x01FF)

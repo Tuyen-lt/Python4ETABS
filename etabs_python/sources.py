@@ -13,11 +13,12 @@ import re
 from contextlib import contextmanager
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import pandas as pd
 
 from .errors import EngineError, ResultNotAvailable, SourceError, TableNotFound
+from .units import parse_unit
 
 ID_COLUMNS = {
     "Story", "Label", "UniqueName", "Name", "Beam", "Column", "Brace", "Pier", "Spandrel", "Element", "Joint",
@@ -70,8 +71,15 @@ def _copy(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def _names(value) -> List[str]:
+    """Case/combo names as exact strings (no stripping: ETABS names may contain repeated spaces, %, ~, /, ...)."""
+    if value is None:
+        return []
+    return [value] if isinstance(value, str) else [str(v) for v in value]
+
+
 def _filter_cases(df: pd.DataFrame, cases, combos) -> pd.DataFrame:
-    names = list(cases or []) + list(combos or [])
+    names = _names(cases) + _names(combos)
     if not names or "OutputCase" not in df.columns:
         return df
     out = df[df["OutputCase"].isin(names)].reset_index(drop=True)
@@ -95,41 +103,64 @@ class TableSource:
 
 
 class ExcelSource(TableSource):
-    """Workbook exported by ETABS (Export > Tables to Excel). Sheets are parsed lazily and cached."""
+    """
+    One or more workbooks exported by ETABS (Export > Tables to Excel). Sheets are parsed lazily and cached.
+
+    A table present in several files: results tables (with an OutputCase column) are concatenated, converting
+    later files to the units of the first; other tables come from the first file that has them.
+    """
     kind = "excel"
 
-    def __init__(self, path):
+    def __init__(self, paths):
         import openpyxl
-        self.path = Path(path)
-        if not self.path.exists():
-            raise SourceError(f"Excel file not found: {self.path}")
-        try:
-            self._wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
-        except Exception as e:
-            raise SourceError(f"Cannot open Excel file {self.path}: {e}")
-        self._index = {}
-        for ws in self._wb.worksheets:
-            first = next(ws.iter_rows(min_row=1, max_row=1, values_only=True), ())
-            title = first[0] if first else None
-            if isinstance(title, str) and title.strip().upper().startswith("TABLE:"):
-                self._index[title.split(":", 1)[1].strip()] = ws.title
+        path_list = [paths] if isinstance(paths, (str, Path)) else list(paths)
+        if not path_list:
+            raise SourceError("ExcelSource needs at least one file")
+        self.paths = [Path(p) for p in path_list]
+        self.path = self.paths[0]
+        self._books = []
+        self._index: Dict[str, List[Tuple[int, str]]] = {}
+        for i, path in enumerate(self.paths):
+            if not path.exists():
+                self.close()
+                raise SourceError(f"Excel file not found: {path}")
+            try:
+                book = openpyxl.load_workbook(path, read_only=True, data_only=True)
+            except Exception as e:
+                self.close()
+                raise SourceError(f"Cannot open Excel file {path}: {e}")
+            self._books.append(book)
+            for ws in book.worksheets:
+                first = next(ws.iter_rows(min_row=1, max_row=1, values_only=True), ())
+                title = first[0] if first else None
+                if isinstance(title, str) and title.strip().upper().startswith("TABLE:"):
+                    self._index.setdefault(title.split(":", 1)[1].strip(), []).append((i, ws.title))
         self._cache: Dict[str, pd.DataFrame] = {}
 
     def tables(self) -> List[str]:
         return list(self._index)
 
+    def table_files(self) -> Dict[str, List[str]]:
+        """Table name -> files containing it (in the given order)."""
+        return {name: [str(self.paths[i]) for i, _ in entries] for name, entries in self._index.items()}
+
     def close(self) -> None:
-        self._wb.close()
+        for book in self._books:
+            book.close()
 
     def table(self, name, cases=None, combos=None):
         if name not in self._index:
             raise TableNotFound(name, "excel")
         if name not in self._cache:
-            self._cache[name] = self._parse(name)
+            parts = [self._parse(name, i, sheet) for i, sheet in self._index[name]]
+            if len(parts) > 1 and "OutputCase" in parts[0].columns:
+                self._cache[name] = _concat_results(name, parts)
+            else:
+                self._cache[name] = parts[0]
         return _filter_cases(_copy(self._cache[name]), cases, combos)
 
-    def _parse(self, name: str) -> pd.DataFrame:
-        rows = self._wb[self._index[name]].iter_rows(values_only=True)
+    def _parse(self, name: str, book: int, sheet: str) -> pd.DataFrame:
+        rows = self._books[book][sheet].iter_rows(values_only=True)
         next(rows)
         headers = list(next(rows, ()))
         while headers and headers[-1] is None:
@@ -140,6 +171,25 @@ class ExcelSource(TableSource):
         keys = [header_to_key(name, h) for h in headers]
         df = coerce_types(pd.DataFrame(data, columns=keys))
         return _with_attrs(df, name, dict(zip(keys, units[:width])))
+
+
+def _concat_results(name: str, parts: List[pd.DataFrame]) -> pd.DataFrame:
+    """Concatenate the same results table from several files, in the units of the first file."""
+    units = dict(parts[0].attrs["units"])
+    aligned = [parts[0]]
+    for part in parts[1:]:
+        part = part.copy()
+        for column, unit in part.attrs["units"].items():
+            target = units.setdefault(column, unit)
+            if unit == target:
+                continue
+            a, b = parse_unit(unit, name, column), parse_unit(target, name, column)
+            if a is None or b is None or a[1:] != b[1:]:
+                raise SourceError(f"Table '{name}' column '{column}' has incompatible units across files: "
+                                  f"'{target}' and '{unit}'")
+            part[column] = pd.to_numeric(part[column], errors="coerce") * a[0] / b[0]
+        aligned.append(part)
+    return _with_attrs(pd.concat(aligned, ignore_index=True), name, units)
 
 
 def _file_name(table: str) -> str:
@@ -218,7 +268,7 @@ class LiveSource(TableSource):
 
     def _select_output(self, cases, combos):
         db = self.sap_model.DatabaseTables
-        cases, combos = list(cases or []), list(combos or [])
+        cases, combos = _names(cases), _names(combos)
         known_cases = set(self.sap_model.LoadCases.GetNameList()[1] or [])
         known_combos = set(self.sap_model.RespCombo.GetNameList()[1] or [])
         unknown = [c for c in cases if c not in known_cases] + [c for c in combos if c not in known_combos]

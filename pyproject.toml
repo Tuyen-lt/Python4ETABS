@@ -7,7 +7,7 @@ packages = ["etabs_python"]
 
 [project]
 name = "etabs_python"
-version = "3.0.0"
+version = "3.1.0"
 authors = [{ name = "Tuyen" }]
 description = "Core engine for CSI ETABS data: live COM, Excel exports, SI units, FastAPI server"
 readme = "README.md"

@@ -79,6 +79,29 @@ def test_job_error_is_reported(client, export_xlsx):
     assert client.get(f"/jobs/{r.json()['job_id']}/result").status_code == 409
 
 
+def test_upload_several_excel_files(client, tmp_path):
+    from conftest import TABLES, write_export
+    stories = {k: TABLES[k] for k in ("Story Definitions", "Tower and Base Story Definitions")}
+    a = write_export(tmp_path / "Story.xlsx", stories)
+    b = write_export(tmp_path / "Rest.xlsx", {k: v for k, v in TABLES.items() if k not in stories})
+    with open(a, "rb") as fa, open(b, "rb") as fb:
+        r = client.post("/sources/excel", files=[("file", ("Story.xlsx", fa)), ("file", ("Rest.xlsx", fb))])
+    assert r.status_code == 200, r.text
+    sid = r.json()["source_id"]
+    assert set(r.json()["tables"]) == set(TABLES)
+    body = client.post("/run/story_at", json={"source_id": sid, "params": {"z": [2.0, 5.0]}}).json()
+    assert body == {"result": ["FL1", "FL2"]}
+    combo = "1_ULSE1   1.35D+1.5L (LongTerm) 80%~"
+    headers, units, rows = TABLES["Joint Reactions"]
+    c = write_export(tmp_path / "JR.xlsx", {"Joint Reactions": (headers, units, [r[:3] + [combo] + r[4:] for r in rows])})
+    with open(c, "rb") as fc:
+        sid2 = client.post("/sources/excel", files={"file": ("JR.xlsx", fc)}).json()["source_id"]
+    job = client.post("/run/joint_reactions", json={"source_id": sid2, "params": {"combos": [combo]}}).json()["job_id"]
+    assert _wait(client, job)["status"] == "done"
+    res = client.get(f"/jobs/{job}/result").json()
+    assert [row[res["columns"].index("OutputCase")] for row in res["rows"]] == [combo]
+
+
 def test_errors(client, export_xlsx):
     sid = _excel_source(client, export_xlsx)
     assert client.post("/run/nope", json={"source_id": sid, "params": {}}).status_code == 404
