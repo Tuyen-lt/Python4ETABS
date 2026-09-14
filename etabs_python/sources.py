@@ -90,6 +90,9 @@ class TableSource:
               combos: Optional[Iterable[str]] = None) -> pd.DataFrame:
         raise NotImplementedError
 
+    def close(self) -> None:
+        """Release resources (open files). Safe to call more than once."""
+
 
 class ExcelSource(TableSource):
     """Workbook exported by ETABS (Export > Tables to Excel). Sheets are parsed lazily and cached."""
@@ -114,6 +117,9 @@ class ExcelSource(TableSource):
 
     def tables(self) -> List[str]:
         return list(self._index)
+
+    def close(self) -> None:
+        self._wb.close()
 
     def table(self, name, cases=None, combos=None):
         if name not in self._index:
