@@ -3,7 +3,9 @@ Module etabs_model.py
 Lop EtabsModel: diem truy cap chinh toi mo hinh ETABS dang mo.
 - Thong tin tang: stories(), story_at(z)
 - Thong tin cau kien: frames(), beams(), columns(), shells(), walls(), slabs(), points(), frame_info()
-- Noi luc: frame_forces(), pier_forces(), joint_reactions()
+- Chon doi tuong: select(), name_from_label(), selected(), clear_selection()
+- Thuoc tinh: frame_properties(), area_properties(), materials()
+- Noi luc: frame_forces(), pier_forces(), joint_reactions(), beam_forces_by_zone()
 - Du lieu khoi luong lon / ghi du lieu: self.bridge (EtabsDataBridge)
 """
 from bisect import bisect_left
@@ -199,6 +201,144 @@ class EtabsModel:
             "point_i": pi, "point_j": pj, "coord_i": ci, "coord_j": cj, "length": length,
         }
 
+    # ---------------------------------------------------------------- chon doi tuong
+    def _obj(self, kind: str):
+        kind = KIND_ALIASES.get(kind.lower())
+        if kind is None:
+            raise ValueError(f"kind khong hop le. Chon trong {sorted(KIND_ALIASES)}")
+        return {"frame": self.sap_model.FrameObj, "area": self.sap_model.AreaObj,
+                "point": self.sap_model.PointObj}[kind]
+
+    def name_from_label(self, label: str, story: str, kind: str = "frame") -> str:
+        """
+        Label + tang -> UniqueName. kind: frame/beam/column/brace | area/shell/wall/slab | point/joint.
+        """
+        name, ret = self._obj(kind).GetNameFromLabel(str(label), str(story))
+        if ret != 0 or not name:
+            raise KeyError(f"Khong tim thay {kind} label='{label}' tang='{story}'")
+        return name
+
+    def select(self, names=None, kind: str = "frame", labels=None, story=None,
+               clear: bool = True) -> List[str]:
+        """
+        Chon doi tuong tren giao dien ETABS. Tra ve danh sach UniqueName da chon.
+        - Theo UniqueName + loai: select(names=['83', '84'], kind='frame')
+        - Theo Label + tang:      select(labels=['B1', 'B2'], story='FL1', kind='beam')
+          story co the la list cung do dai voi labels.
+        clear=True: bo chon cac doi tuong cu truoc.
+        """
+        obj = self._obj(kind)
+        names = _to_list(names)
+        labels = _to_list(labels)
+        if labels:
+            stories = _to_list(story)
+            if len(stories) == 1:
+                stories = stories * len(labels)
+            if len(stories) != len(labels):
+                raise ValueError("story phai la 1 ten tang hoac list cung do dai voi labels")
+            names += [self.name_from_label(l, s, kind) for l, s in zip(labels, stories)]
+        if not names:
+            raise ValueError("Can truyen names hoac labels + story")
+        if clear:
+            self.clear_selection()
+        for n in names:
+            if obj.SetSelected(str(n), True) != 0:
+                raise KeyError(f"Khong chon duoc {kind} '{n}'")
+        self.sap_model.View.RefreshView(0, False)
+        return [str(n) for n in names]
+
+    def selected(self) -> pd.DataFrame:
+        """
+        Danh sach doi tuong dang duoc chon: Type (Point/Frame/Area/...), UniqueName.
+        """
+        n, types, names, _ = self.sap_model.SelectObj.GetSelected()
+        return pd.DataFrame({"Type": [SELECT_TYPES.get(t, t) for t in types][:n], "UniqueName": list(names)[:n]})
+
+    def clear_selection(self):
+        self.sap_model.SelectObj.ClearSelection()
+
+    # ---------------------------------------------------------------- thuoc tinh
+    def materials(self) -> pd.DataFrame:
+        """
+        Vat lieu: Type, MatType, Grade, UnitWeight, E1, G12, U12, A1, Fc (be tong), Fy/Fu (thep, cot thep).
+        """
+        df = self.bridge.pull_table("Material Properties - General")[["Material", "Type", "Grade"]]
+        df = df.rename(columns={"Type": "MatType"})
+        df = df.merge(self.bridge.pull_table("Material Properties - Basic Mechanical Properties"),
+                      on="Material", how="left")
+        conc = self.bridge.pull_table("Material Properties - Concrete Data")
+        if "Fc" in conc.columns:
+            df = df.merge(conc[["Material", "Fc"]], on="Material", how="left")
+        steel = pd.concat([self.bridge.pull_table(t) for t in
+                           ("Material Properties - Steel Data", "Material Properties - Rebar Data",
+                            "Material Properties - Tendon Data")], ignore_index=True)
+        if "Fy" in steel.columns:
+            df = df.merge(steel[["Material", "Fy", "Fu"]].drop_duplicates("Material"), on="Material", how="left")
+        return _auto_numeric(df)
+
+    def _assignments(self, prefix: str, skip: Iterable[str] = ()) -> pd.DataFrame:
+        """
+        Gop moi bang '<prefix>*' co 1 dong/doi tuong theo UniqueName.
+        """
+        tables = [t for t in self.bridge.get_available_tables() if t.startswith(prefix) and t not in skip]
+        base = self.bridge.pull_table(tables.pop(tables.index(prefix + "Summary")))
+        for t in tables:
+            df = self.bridge.pull_table(t)
+            if df.empty or "UniqueName" not in df.columns or df["UniqueName"].duplicated().any():
+                continue  # ponytail: bang nhieu dong/doi tuong (tai trong...) bi bo qua, can thi pull_table rieng
+            cols = ["UniqueName"] + [c for c in df.columns if c not in base.columns]
+            if len(cols) > 1:
+                base = base.merge(df[cols], on="UniqueName", how="left")
+        return base
+
+    def frame_properties(self) -> pd.DataFrame:
+        """
+        Toan bo frame kem: assignment (tang, loai, chieu dai, offset, insertion point, local axis...),
+        tiet dien (kich thuoc t3/t2, A, I33, I22, J...), stiffness modifier va vat lieu.
+        Modifier: Sect_* (cua tiet dien) x Obj_* (gan cho doi tuong, mac dinh 1) = cot hieu dung (AMod, I3Mod...).
+        """
+        mods = self.bridge.pull_table("Frame Assignments - Property Modifiers")
+        df = self._assignments("Frame Assignments - ", skip=["Frame Assignments - Property Modifiers"])
+
+        sect = self.bridge.pull_table("Frame Section Property Definitions - Summary")
+        dims = [self.bridge.pull_table(t) for t in self.bridge.get_available_tables()
+                if t.startswith("Frame Section Property Definitions - ")]
+        dims = [d[["Name"] + [c for c in ("t3", "t2", "tf", "tw") if c in d.columns]] for d in dims
+                if "Name" in d.columns and "t3" in d.columns]
+        if dims:
+            sect = sect.merge(pd.concat(dims, ignore_index=True).drop_duplicates("Name"), on="Name", how="left")
+        sect = sect.drop(columns=[c for c in ("Color",) if c in sect.columns])
+        sect = sect.rename(columns={**{m: f"Sect_{m}" for m in FRAME_MODS}, "Name": "AnalysisSect"})
+
+        df = df.merge(sect.drop(columns=[c for c in sect.columns if c in df.columns and c != "AnalysisSect"]),
+                      on="AnalysisSect", how="left")
+        df = _apply_modifiers(df, mods, FRAME_MODS)
+        return _auto_numeric(df.merge(self.materials(), on="Material", how="left"))
+
+    def area_properties(self) -> pd.DataFrame:
+        """
+        Toan bo area (san, vach) kem: assignment, tiet dien (loai, chieu day), stiffness modifier va vat lieu.
+        Modifier: Sect_* x Obj_* = cot hieu dung (f11Mod, m11Mod...).
+        """
+        mods = self.bridge.pull_table("Area Assignments - Stiffness Modifiers")
+        df = self._assignments("Area Assignments - ", skip=["Area Assignments - Stiffness Modifiers"])
+
+        sect = self.bridge.pull_table("Area Section Property Definitions - Summary")
+        sect = sect.rename(columns={"Name": "SectProp", "Type": "SectType"})
+        prop_mods = pd.concat([self.bridge.pull_table(t) for t in
+                               ("Slab Property Definitions", "Wall Property Definitions - Specified",
+                                "Deck Property Definitions")], ignore_index=True)
+        if "Name" in prop_mods.columns:
+            keep = ["Name"] + [m for m in AREA_MODS if m in prop_mods.columns]
+            prop_mods = prop_mods[keep].drop_duplicates("Name")
+            prop_mods = prop_mods.rename(columns={**{m: f"Sect_{m}" for m in AREA_MODS}, "Name": "SectProp"})
+            sect = sect.merge(prop_mods, on="SectProp", how="left")
+
+        df = df.merge(sect.drop(columns=[c for c in sect.columns if c in df.columns and c != "SectProp"]),
+                      on="SectProp", how="left")
+        df = _apply_modifiers(df, mods, AREA_MODS)
+        return _auto_numeric(df.merge(self.materials(), on="Material", how="left"))
+
     # ---------------------------------------------------------------- noi luc
     def select_output(self, cases=None, combos=None):
         """
@@ -254,6 +394,94 @@ class EtabsModel:
         dfs = [result_to_frame(self.sap_model.Results.JointReact(str(n), OBJECT), JOINT_REACT_COLS,
                                f"JointReact '{n}'") for n in names]
         return _numeric(pd.concat(dfs, ignore_index=True), JOINT_REACT_COLS[5:])
+
+    def beam_forces_by_zone(self, names=None, cases=None, combos=None,
+                            zones=(0.25, 0.5, 0.25), envelope: bool = False) -> pd.DataFrame:
+        """
+        Gom noi luc dam theo vung chieu dai (mac dinh 0.25L - 0.5L - 0.25L: Start / Middle / End).
+        Moi vung tra ve max/min cua P, V2, V3, T, M2, M3.
+        envelope=False: tach theo LoadCase (va StepType voi combo bao); True: bao tren moi case/combo da chon.
+        names=None -> toan bo dam.
+        """
+        beams = self.beams()
+        names = _to_list(names)
+        if names:
+            beams = beams[beams["UniqueName"].isin([str(n) for n in names])]
+        forces = self.frame_forces(names or None, cases, combos)
+        forces = forces[forces["Obj"].isin(beams["UniqueName"])]
+        out = zone_envelope(forces, beams.set_index("UniqueName")["Length"], zones, envelope)
+        info = beams[["UniqueName", "Story", "Label", "Length", "AnalysisSect"]].rename(columns={"UniqueName": "Obj"})
+        return info.merge(out, on="Obj", how="right")
+
+
+FORCE_COMPONENTS = ["P", "V2", "V3", "T", "M2", "M3"]
+FRAME_MODS = ["AMod", "A2Mod", "A3Mod", "JMod", "I2Mod", "I3Mod", "MMod", "WMod"]
+AREA_MODS = ["f11Mod", "f22Mod", "f12Mod", "m11Mod", "m22Mod", "m12Mod", "v13Mod", "v23Mod", "MMod", "WMod"]
+KIND_ALIASES = {
+    "frame": "frame", "beam": "frame", "column": "frame", "brace": "frame",
+    "area": "area", "shell": "area", "wall": "area", "slab": "area",
+    "point": "point", "joint": "point",
+}
+NAME_COLS = {"Story", "Label", "UniqueName", "Name", "AnalysisSect", "DesignSect", "SectProp", "Material",
+             "Grade", "Pier", "PierName", "Spandrel", "SpandName", "SpandStory", "Diaphragm", "Shape", "Type",
+             "PropType", "SectType", "DeckMat"}
+# eObjType cua SelectObj.GetSelected
+SELECT_TYPES = {1: "Point", 2: "Frame", 3: "Cable", 4: "Tendon", 5: "Area", 6: "Solid", 7: "Link"}
+
+
+def _auto_numeric(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Chuyen cot chuoi sang so neu moi gia tri khac rong deu la so. Cot ten (UniqueName, Label...) giu chuoi.
+    """
+    for c in df.columns:
+        if df[c].dtype == object and c not in NAME_COLS:
+            conv = pd.to_numeric(df[c], errors="coerce")
+            if conv.notna().sum() == df[c].notna().sum():
+                df[c] = conv
+    return df
+
+
+def _apply_modifiers(df: pd.DataFrame, obj_mods: pd.DataFrame, mod_cols: List[str]) -> pd.DataFrame:
+    """
+    Obj_* = modifier gan cho doi tuong (khong co trong bang -> 1), cot hieu dung = Sect_* x Obj_*.
+    """
+    present = [m for m in mod_cols if m in obj_mods.columns]
+    obj_mods = obj_mods[["UniqueName"] + present].rename(columns={m: f"Obj_{m}" for m in present})
+    df = df.merge(obj_mods, on="UniqueName", how="left")
+    for m in present:
+        obj = pd.to_numeric(df[f"Obj_{m}"], errors="coerce").fillna(1.0)
+        sect = pd.to_numeric(df[f"Sect_{m}"], errors="coerce").fillna(1.0) if f"Sect_{m}" in df.columns else 1.0
+        df[f"Obj_{m}"] = obj
+        df[m] = sect * obj
+    return df
+
+
+def zone_names(zones) -> List[str]:
+    return ["Start", "Middle", "End"] if len(zones) == 3 else [f"Z{i + 1}" for i in range(len(zones))]
+
+
+def zone_envelope(forces: pd.DataFrame, lengths: pd.Series, zones=(0.25, 0.5, 0.25),
+                  envelope: bool = False, tol: float = 1e-6) -> pd.DataFrame:
+    """
+    forces: output frame_forces (Obj, ObjSta, LoadCase, StepType, P..M3); lengths: Series UniqueName -> chieu dai.
+    Tram nam dung ranh gioi 2 vung duoc tinh cho ca 2 vung.
+    """
+    if abs(sum(zones) - 1.0) > 1e-6:
+        raise ValueError(f"Tong ty le zones phai = 1, dang la {sum(zones)}")
+    rel = forces["ObjSta"] / forces["Obj"].map(lengths).astype(float)
+    keys = ["Obj"] if envelope else ["Obj", "LoadCase", "StepType"]
+    parts, start = [], 0.0
+    for name, ratio in zip(zone_names(zones), zones):
+        end = start + ratio
+        part = forces[(rel >= start - tol) & (rel <= end + tol)].assign(Zone=name, ZoneStart=start, ZoneEnd=end)
+        parts.append(part)
+        start = end
+    if not parts or forces.empty:
+        return pd.DataFrame(columns=keys + ["Zone", "ZoneStart", "ZoneEnd"])
+    grouped = pd.concat(parts).groupby(keys + ["Zone", "ZoneStart", "ZoneEnd"], sort=False)[FORCE_COMPONENTS]
+    out = grouped.agg(["max", "min"])
+    out.columns = [f"{c}_{s}" for c, s in out.columns]
+    return out.reset_index().sort_values(keys + ["ZoneStart"], ignore_index=True)
 
 
 def story_from_elevation(z: float, elevations: List[float], names: List[str],
