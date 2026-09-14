@@ -1,36 +1,31 @@
 """
-Module data_bridge.py
-Cung cap lop EtabsDataBridge ho tro Pull va Inject du lieu truc tiep voi ETABS trong bo nho Python.
+EtabsDataBridge: in-memory pull and inject of ETABS data.
 
-Co che:
-1. PULL (Doc): Su dung cDatabaseTables chuyen truc tiep sang pandas DataFrame trong bo nho.
-   - pull_table: Doc bat ky bang nao thanh DataFrame.
-   - pull_frames: Trich xuat thong tin dac tinh va connectivity cua toan bo Frame.
-   - pull_shells: Trich xuat thong tin dac tinh va connectivity cua toan bo Shell (Area).
-   - pull_points: Trich xuat toa do Joint Coordinates.
+1. PULL: DatabaseTables -> pandas DataFrame.
+   - pull_table: read any table.
+   - pull_frames / pull_shells / pull_points: frame, area and point tables.
 
-2. INJECT (Ghi/Day): Su dung Direct OAPI Methods it loi nhat cho tung loai du lieu.
-   - inject_names: Doi Unique Name cho Frame, Shell, Point.
-   - inject_group_definition: Tao dinh nghia nhom (GroupDef.SetGroup).
-   - inject_group_assignment: Gan cau kien vao nhom (SetGroupAssign).
-   - inject_frame_sections: Dinh nghia cac loai tiet dien Frame (Rectangular, Circle, I, Tube, Pipe).
-   - inject_section_assignments: Gan tiet dien cho cau kien Frame va Shell.
+2. INJECT: direct OAPI calls.
+   - inject_names: rename frames, areas, points.
+   - inject_group_definition: define groups (GroupDef.SetGroup).
+   - inject_group_assignment: assign objects to a group (SetGroupAssign).
+   - inject_frame_sections: define frame sections (Rectangular, Circle, I, Tube, Pipe).
+   - inject_section_assignments: assign sections to frames and areas.
 """
 from typing import Optional, Dict, Any, List, Union
 import logging
 import pandas as pd
 import comtypes.client
 
-from connection import get_active_etabs, is_model_locked, ensure_unlocked, ModelLockedError
+from .connection import get_active_etabs, is_model_locked, ensure_unlocked
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("EtabsDataBridge")
 
 
 class EtabsDataBridge:
     def __init__(self, sap_model=None, pid: Optional[int] = None):
         """
-        Khoi tao DataBridge. Neu sap_model la None, tu dong ket noi instance dang mo.
+        Create the bridge. Attaches to the running ETABS instance when sap_model is None.
         """
         if sap_model is not None:
             self.sap_model = sap_model
@@ -39,23 +34,23 @@ class EtabsDataBridge:
 
     def is_locked(self) -> bool:
         """
-        Kiem tra trang thai khoa mo hinh.
+        Return True if the model is locked.
         """
         return is_model_locked(self.sap_model)
 
-    def _ensure_unlocked(self, operation_name: str = "Thao tac"):
+    def _ensure_unlocked(self, operation_name: str = "Operation"):
         """
-        Dung va bao loi neu mo hinh bi khoa truoc khi thuc hien ghi du lieu.
+        Raise ModelLockedError if the model is locked before writing.
         """
         ensure_unlocked(self.sap_model, operation_name)
 
     # =========================================================================
-    # NHOM PULL: Trich xuat du lieu truc tiep vao bo nho (Pandas DataFrame)
+    # PULL: read data into pandas DataFrames
     # =========================================================================
 
     def pull_table(self, table_key: str) -> pd.DataFrame:
         """
-        Doc mot bang Database Table tu ETABS va chuyen truc tiep thanh DataFrame trong bo nho.
+        Read an ETABS database table into a DataFrame.
         """
         try:
             ret = self.sap_model.DatabaseTables.GetTableForDisplayArray(table_key, [], "", 0, [], 0, [])
@@ -89,15 +84,14 @@ class EtabsDataBridge:
 
     def get_available_tables(self) -> List[str]:
         """
-        Lay danh sach toan bo cac bang Database co san trong mo hinh.
+        Return the names of the database tables available in the model.
         """
         ret = self.sap_model.DatabaseTables.GetAvailableTables(0, [])
         return list(ret[1]) if ret[1] else []
 
     def pull_frames(self) -> pd.DataFrame:
         """
-        Pull toan bo du lieu Frame (Story, Label, Unique Name, Section, Connectivity, Length).
-        Tu dong kiem tra cac bang phu hop voi phien ban ETABS.
+        Pull frame data, trying table names used by different ETABS versions.
         """
         for tbl in ["Frame Assignments - Section Properties", "Frame Assignments - Summary", "Frame Section Assignments"]:
             df = self.pull_table(tbl)
@@ -107,7 +101,7 @@ class EtabsDataBridge:
 
     def pull_shells(self) -> pd.DataFrame:
         """
-        Pull toan bo du lieu Shell/Area (Story, Label, Unique Name, Section, Connectivity).
+        Pull area (shell) data.
         """
         for tbl in ["Area Assignments - Section Properties", "Area Assignments - Summary", "Area Section Assignments"]:
             df = self.pull_table(tbl)
@@ -117,7 +111,7 @@ class EtabsDataBridge:
 
     def pull_points(self) -> pd.DataFrame:
         """
-        Pull toan bo toa do Joint Coordinates (Point, X, Y, Z).
+        Pull point coordinates (UniqueName, Story, X, Y, Z).
         """
         for tbl in ["Point Object Connectivity", "Joint Coordinates", "Objects and Elements - Joints"]:
             df = self.pull_table(tbl)
@@ -126,15 +120,15 @@ class EtabsDataBridge:
         return pd.DataFrame()
 
     # =========================================================================
-    # NHOM INJECT: Ghi va cap nhat du lieu truc tiep qua OAPI
+    # INJECT: write data through OAPI
     # =========================================================================
 
     def inject_names(self, rename_records: List[Dict[str, str]]) -> Dict[str, Any]:
         """
-        Doi Unique Name cho Frame, Shell, Point.
+        Rename frames, areas and points.
         rename_records: List[{'type': 'frame'|'shell'|'point', 'old_name': '...', 'new_name': '...'}]
         """
-        self._ensure_unlocked("Doi ten cau kien")
+        self._ensure_unlocked("Rename objects")
         results = {"success": 0, "failed": 0, "errors": []}
 
         for idx, row in enumerate(rename_records, start=1):
@@ -144,7 +138,7 @@ class EtabsDataBridge:
 
             if not elem_type or not old_name or not new_name:
                 results["failed"] += 1
-                results["errors"].append(f"Dong {idx}: Thieu thong tin type, old_name hoac new_name")
+                results["errors"].append(f"Row {idx}: missing type, old_name or new_name")
                 continue
 
             ret = -1
@@ -156,23 +150,23 @@ class EtabsDataBridge:
                 ret = self.sap_model.PointObj.ChangeName(old_name, new_name)
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Dong {idx}: Loai cau kien '{elem_type}' khong hop le")
+                results["errors"].append(f"Row {idx}: invalid object type '{elem_type}'")
                 continue
 
             if ret == 0:
                 results["success"] += 1
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Dong {idx}: Doi ten that bai (ret={ret}) cho {elem_type} '{old_name}' -> '{new_name}'")
+                results["errors"].append(f"Row {idx}: rename failed (ret={ret}) for {elem_type} '{old_name}' -> '{new_name}'")
 
         self.refresh_view()
         return results
 
     def inject_group_definition(self, group_names: Union[str, List[str]]) -> Dict[str, Any]:
         """
-        Dinh nghia mot hoac nhieu nhom (Group) moi trong ETABS.
+        Define one or more groups.
         """
-        self._ensure_unlocked("Dinh nghia nhom")
+        self._ensure_unlocked("Define groups")
         if isinstance(group_names, str):
             group_names = [group_names]
 
@@ -183,65 +177,62 @@ class EtabsDataBridge:
                 results["success"] += 1
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Khong the tao group '{name}' (ret={ret})")
+                results["errors"].append(f"Cannot create group '{name}' (ret={ret})")
 
         return results
 
     def inject_group_assignment(self, group_name: str, elements: Dict[str, List[str]], remove: bool = False) -> Dict[str, Any]:
         """
-        Gan cac cau kien vao mot nhom cu the.
-        elements: Dict gom cac key:
-            'frames': danh sach ten frame
-            'shells': danh sach ten shell
-            'points': danh sach ten point
+        Assign objects to a group.
+        elements: {'frames': [...], 'shells': [...], 'points': [...]}
         """
-        self._ensure_unlocked("Gan cau kien vao nhom")
-        # Dam bao group da duoc dinh nghia
+        self._ensure_unlocked("Assign objects to group")
+        # Make sure the group exists
         self.sap_model.GroupDef.SetGroup(group_name)
 
         results = {"assigned": 0, "failed": 0, "errors": []}
 
-        # Gan Frames
+        # Frames
         for frame in elements.get("frames", []):
             ret = self.sap_model.FrameObj.SetGroupAssign(frame, group_name, remove, 0)
             if ret == 0:
                 results["assigned"] += 1
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Loi gan Frame '{frame}' vao group '{group_name}' (ret={ret})")
+                results["errors"].append(f"Cannot assign frame '{frame}' to group '{group_name}' (ret={ret})")
 
-        # Gan Shells
+        # Shells
         for shell in elements.get("shells", []):
             ret = self.sap_model.AreaObj.SetGroupAssign(shell, group_name, remove, 0)
             if ret == 0:
                 results["assigned"] += 1
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Loi gan Shell '{shell}' vao group '{group_name}' (ret={ret})")
+                results["errors"].append(f"Cannot assign shell '{shell}' to group '{group_name}' (ret={ret})")
 
-        # Gan Points
+        # Points
         for point in elements.get("points", []):
             ret = self.sap_model.PointObj.SetGroupAssign(point, group_name, remove, 0)
             if ret == 0:
                 results["assigned"] += 1
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Loi gan Point '{point}' vao group '{group_name}' (ret={ret})")
+                results["errors"].append(f"Cannot assign point '{point}' to group '{group_name}' (ret={ret})")
 
         return results
 
     def inject_frame_sections(self, section_definitions: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Dinh nghia hang loat tiet dien Frame moi (Rectangle, Circle, I-Section, Tube, Pipe).
+        Define frame sections in bulk (Rectangle, Circle, I-Section, Tube, Pipe).
 
-        Cau truc moi item trong section_definitions:
-        - Chu nhat: {'type': 'rect', 'name': 'B300x600', 'mat': 'C30', 'depth': 0.6, 'width': 0.3}
-        - Tron:     {'type': 'circle', 'name': 'C500', 'mat': 'C30', 'dia': 0.5}
-        - Thep I:   {'type': 'i', 'name': 'H400x200', 'mat': 'SS400', 'depth': 0.4, 'width': 0.2, 'tf': 0.013, 'tw': 0.008}
-        - Thep hop: {'type': 'tube', 'name': 'BOX200', 'mat': 'SS400', 'depth': 0.2, 'width': 0.2, 'tf': 0.008, 'tw': 0.008}
-        - Thep ong: {'type': 'pipe', 'name': 'PIPE219', 'mat': 'SS400', 'dia': 0.219, 'tw': 0.006}
+        Item format:
+        - Rectangle: {'type': 'rect', 'name': 'B300x600', 'mat': 'C30', 'depth': 0.6, 'width': 0.3}
+        - Circle:   {'type': 'circle', 'name': 'C500', 'mat': 'C30', 'dia': 0.5}
+        - Steel I:  {'type': 'i', 'name': 'H400x200', 'mat': 'SS400', 'depth': 0.4, 'width': 0.2, 'tf': 0.013, 'tw': 0.008}
+        - Tube:     {'type': 'tube', 'name': 'BOX200', 'mat': 'SS400', 'depth': 0.2, 'width': 0.2, 'tf': 0.008, 'tw': 0.008}
+        - Pipe:     {'type': 'pipe', 'name': 'PIPE219', 'mat': 'SS400', 'dia': 0.219, 'tw': 0.006}
         """
-        self._ensure_unlocked("Dinh nghia tiet dien")
+        self._ensure_unlocked("Define sections")
         results = {"success": 0, "failed": 0, "errors": []}
 
         for idx, sec in enumerate(section_definitions, start=1):
@@ -251,7 +242,7 @@ class EtabsDataBridge:
 
             if not name or not mat:
                 results["failed"] += 1
-                results["errors"].append(f"Muc {idx}: Thieu ten tiet dien ('name') hoac vat lieu ('mat')")
+                results["errors"].append(f"Item {idx}: missing section name ('name') or material ('mat')")
                 continue
 
             ret = -1
@@ -288,27 +279,27 @@ class EtabsDataBridge:
 
                 else:
                     results["failed"] += 1
-                    results["errors"].append(f"Muc {idx} ('{name}'): Loai tiet dien '{sec_type}' khong duoc ho tro")
+                    results["errors"].append(f"Item {idx} ('{name}'): unsupported section type '{sec_type}'")
                     continue
 
                 if ret == 0:
                     results["success"] += 1
                 else:
                     results["failed"] += 1
-                    results["errors"].append(f"Muc {idx} ('{name}'): Tao tiet dien that bai (ret={ret})")
+                    results["errors"].append(f"Item {idx} ('{name}'): section definition failed (ret={ret})")
 
             except Exception as ex:
                 results["failed"] += 1
-                results["errors"].append(f"Muc {idx} ('{name}'): Ngoai le khi tao tiet dien: {ex}")
+                results["errors"].append(f"Item {idx} ('{name}'): exception while defining section: {ex}")
 
         return results
 
     def inject_section_assignments(self, assignments: List[Dict[str, str]]) -> Dict[str, Any]:
         """
-        Gan tiet dien cho danh sach Frame hoac Shell.
+        Assign sections to frames or areas.
         assignments: List[{'name': '1', 'section': 'B300x600', 'type': 'frame'|'shell'}]
         """
-        self._ensure_unlocked("Gan tiet dien")
+        self._ensure_unlocked("Assign sections")
         results = {"success": 0, "failed": 0, "errors": []}
 
         for idx, item in enumerate(assignments, start=1):
@@ -318,7 +309,7 @@ class EtabsDataBridge:
 
             if not name or not section:
                 results["failed"] += 1
-                results["errors"].append(f"Muc {idx}: Thieu 'name' hoac 'section'")
+                results["errors"].append(f"Item {idx}: missing 'name' or 'section'")
                 continue
 
             ret = -1
@@ -328,21 +319,21 @@ class EtabsDataBridge:
                 ret = self.sap_model.AreaObj.SetProperty(name, section)
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Muc {idx}: Loai cau kien '{elem_type}' khong hop le cho gán tiet dien")
+                results["errors"].append(f"Item {idx}: invalid object type '{elem_type}' for section assignment")
                 continue
 
             if ret == 0:
                 results["success"] += 1
             else:
                 results["failed"] += 1
-                results["errors"].append(f"Muc {idx}: Gan tiet dien '{section}' cho {elem_type} '{name}' that bai (ret={ret})")
+                results["errors"].append(f"Item {idx}: assigning section '{section}' to {elem_type} '{name}' failed (ret={ret})")
 
         self.refresh_view()
         return results
 
     def refresh_view(self):
         """
-        Lam moi khung nhin 3D/Plan trong ETABS.
+        Refresh the ETABS views.
         """
         try:
             self.sap_model.View.RefreshView(0, False)
@@ -351,10 +342,10 @@ class EtabsDataBridge:
 
     def execute_batch(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Thuc thi mot chuoi thao tac tu dong hoa (Tao nhom, Dinh nghia tiet dien, Doi ten, Gan nhom, Gan tiet dien).
-        Nhan vao payload da qua chuan hoa (tu data_parser).
+        Run a batch: create groups, define sections, rename, assign groups, assign sections.
+        Expects a payload normalized by parser.parse_json_payload.
         """
-        self._ensure_unlocked("Thuc thi batch")
+        self._ensure_unlocked("Execute batch")
 
         report = {
             "model_file": self.sap_model.GetModelFilename(),
@@ -363,7 +354,7 @@ class EtabsDataBridge:
             "errors": []
         }
 
-        # 1. Tao Groups
+        # 1. Create groups
         groups = payload.get("create_groups", [])
         if groups:
             res_grp = self.inject_group_definition(groups)
@@ -371,7 +362,7 @@ class EtabsDataBridge:
             if res_grp["errors"]:
                 report["errors"].extend(res_grp["errors"])
 
-        # 2. Dinh nghia Frame Sections
+        # 2. Define frame sections
         sections = payload.get("frame_sections", [])
         if sections:
             res_sec = self.inject_frame_sections(sections)
@@ -379,7 +370,7 @@ class EtabsDataBridge:
             if res_sec["errors"]:
                 report["errors"].extend(res_sec["errors"])
 
-        # 3. Doi ten cau kien
+        # 3. Rename objects
         renames = payload.get("rename", [])
         if renames:
             res_ren = self.inject_names(renames)
@@ -387,7 +378,7 @@ class EtabsDataBridge:
             if res_ren["errors"]:
                 report["errors"].extend(res_ren["errors"])
 
-        # 4. Gan cau kien vao Group
+        # 4. Assign objects to groups
         assign_groups = payload.get("assign_groups", {})
         if assign_groups:
             grp_assign_res = {"assigned": 0, "failed": 0, "details": {}}
@@ -400,7 +391,7 @@ class EtabsDataBridge:
                     report["errors"].extend(res_ga["errors"])
             report["summary"]["assign_groups"] = grp_assign_res
 
-        # 5. Gan tiet dien
+        # 5. Assign sections
         sec_assigns = payload.get("assign_sections", [])
         if sec_assigns:
             res_sa = self.inject_section_assignments(sec_assigns)

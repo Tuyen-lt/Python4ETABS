@@ -1,7 +1,6 @@
 """
-Module data_parser.py
-Chuyen doi va chuan hoa du lieu tu chuoi JSON, tu dien Python, hoac tep Excel (.xlsx) / CSV
-thanh cau truc tham so tieu chuan de truyen vao EtabsDataBridge.
+Payload parsing: normalizes JSON strings, dicts, Excel (.xlsx) or CSV files into the
+standard batch payload consumed by EtabsDataBridge.execute_batch.
 """
 from typing import Union, Dict, Any, List
 from pathlib import Path
@@ -14,9 +13,9 @@ logger = logging.getLogger("DataParser")
 
 def parse_json_payload(data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
     """
-    Chuan hoa chuoi JSON hoac dict thanh cau truc batch execution tieu chuan.
+    Normalize a JSON string or dict into the standard batch payload.
 
-    Cau truc tieu chuan tra ve:
+    Returned structure:
     {
         "create_groups": List[str],
         "rename": List[{"type": str, "old_name": str, "new_name": str}],
@@ -29,11 +28,11 @@ def parse_json_payload(data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
         try:
             payload = json.loads(data)
         except Exception as e:
-            raise ValueError(f"Khong the parse chuoi JSON: {e}")
+            raise ValueError(f"Cannot parse JSON string: {e}")
     elif isinstance(data, dict):
         payload = data
     else:
-        raise TypeError(f"Dinh dang dau vao phai la str (JSON) hoac dict, nhan duoc: {type(data)}")
+        raise TypeError(f"Input must be a JSON str or dict, got: {type(data)}")
 
     standard_payload = {
         "create_groups": [],
@@ -69,7 +68,7 @@ def parse_json_payload(data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
     # 3. Assign Groups
     raw_assign = payload.get("assign_groups") or payload.get("group_assignments") or {}
     if isinstance(raw_assign, dict):
-        # Dang { "G1": { "frames": [...], "shells": [...], "points": [...] } }
+        # Form { "G1": { "frames": [...], "shells": [...], "points": [...] } }
         for g_name, items in raw_assign.items():
             g_str = str(g_name).strip()
             if not g_str:
@@ -80,7 +79,7 @@ def parse_json_payload(data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
                 "points": [str(x).strip() for x in items.get("points", [])]
             }
     elif isinstance(raw_assign, list):
-        # Dang list: [ {"group": "G1", "type": "frame", "name": "B1"}, ... ]
+        # List form: [ {"group": "G1", "type": "frame", "name": "B1"}, ... ]
         for item in raw_assign:
             if not isinstance(item, dict):
                 continue
@@ -115,18 +114,18 @@ def parse_json_payload(data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
 
 def parse_excel_file(file_input: Any) -> Dict[str, Any]:
     """
-    Doc tep Excel (.xlsx) hoac buffer bytes va chuyen doi thanh cau truc standard_payload.
-    Nhan dien cac sheet:
-    - Groups: cot 'Name' hoac 'Group'
-    - Rename: cac cot 'Type', 'Old_Name' (hoac 'Old'), 'New_Name' (hoac 'New')
-    - Assign: cac cot 'Group', 'Type', 'Name' (hoac 'ObjectName')
-    - Sections: cac cot 'Name', 'Type', 'Mat', 'Depth', 'Width', ...
-    - AssignSections: cac cot 'Name', 'Section', 'Type'
+    Read an Excel file (.xlsx) or bytes buffer into the standard payload.
+    Recognized sheets:
+    - Groups: column 'Name' or 'Group'
+    - Rename: columns 'Type', 'Old_Name' (or 'Old'), 'New_Name' (or 'New')
+    - Assign: columns 'Group', 'Type', 'Name' (or 'ObjectName')
+    - Sections: columns 'Name', 'Type', 'Mat', 'Depth', 'Width', ...
+    - AssignSections: columns 'Name', 'Section', 'Type'
     """
     if isinstance(file_input, (str, Path)):
         path = Path(file_input)
         if not path.exists():
-            raise FileNotFoundError(f"Tep Excel khong ton tai: {file_input}")
+            raise FileNotFoundError(f"Excel file not found: {file_input}")
         excel_obj = pd.ExcelFile(path)
     else:
         excel_obj = pd.ExcelFile(file_input)
@@ -213,12 +212,12 @@ def parse_excel_file(file_input: Any) -> Dict[str, Any]:
 
 def parse_csv_file(file_input: Any, task_type: str = "rename") -> List[Dict[str, Any]]:
     """
-    Doc tep CSV don le hoac buffer va tra ve danh sach ban ghi.
+    Read a CSV file or buffer and return its records.
     """
     if isinstance(file_input, (str, Path)):
         path = Path(file_input)
         if not path.exists():
-            raise FileNotFoundError(f"Tep CSV khong ton tai: {file_input}")
+            raise FileNotFoundError(f"CSV file not found: {file_input}")
         df = pd.read_csv(path)
     else:
         df = pd.read_csv(file_input)
