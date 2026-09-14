@@ -53,7 +53,8 @@ def coerce_types(df: pd.DataFrame) -> pd.DataFrame:
         if _is_id(column):
             df[column] = values.map(lambda v: v if v is None or (isinstance(v, float) and pd.isna(v)) else
                                     (str(int(v)) if isinstance(v, float) and v.is_integer() else str(v)))
-        elif values.dtype == object:
+        elif (pd.api.types.is_object_dtype(values.dtype) or
+              pd.api.types.is_string_dtype(values.dtype)):
             converted = pd.to_numeric(values, errors="coerce")
             if converted.notna().sum() == values.notna().sum():
                 df[column] = converted

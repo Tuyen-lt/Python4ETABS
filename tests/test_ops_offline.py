@@ -92,3 +92,53 @@ def test_other_force_tables(eng):
     assert eng.run("column_forces")["P"].tolist() == [-100, -90]
     assert eng.run("pier_forces", piers="P1")["Location"].tolist() == ["Top", "Bottom"]
     assert eng.run("joint_reactions")["FZ"].sum() == 700
+
+
+def test_global_response_and_modal_operations(eng):
+    assert eng.run("base_reactions", combos="ULS1")["FZ"].iloc[0] == 700
+    assert eng.run("story_drifts", stories="FL1", combos="SLS1")["Drift"].iloc[0] == pytest.approx(.002)
+    assert eng.run("story_max_over_average_drifts")["Ratio"].iloc[0] == pytest.approx(1.6)
+    assert eng.run("diaphragm_max_over_average_drifts")["Ratio"].iloc[0] == pytest.approx(1.333)
+    assert eng.run("modal_periods", cases="MODAL", modes=2)["Period"].iloc[0] == pytest.approx(.9)
+    mass = eng.run("modal_mass_participation", modes=[1, 2])
+    assert mass["SumUX"].iloc[-1] == pytest.approx(.8)
+    assert eng.run("modal_load_participation")["Dynamic"].iloc[0] == 80
+    assert eng.run("modal_participation_factors")["ModalMass"].iloc[0] == 100
+    assert eng.run("modal_direction_factors")["UX"].iloc[0] == 1
+    assert eng.run("story_forces", stories="FL1")["VX"].iloc[0] == 100
+    assert eng.run("story_stiffness")["StiffX"].iloc[0] == 12500
+    assert eng.run("centers_of_mass_and_rigidity")["XCR"].iloc[0] == pytest.approx(4.2)
+    assert eng.run("tributary_area_llrf", names="10")["LLRF"].iloc[0] == pytest.approx(.75)
+
+
+def test_loadset_plan_data(eng):
+    data = eng.run("loadset_plan_data")
+    assert isinstance(data, dict)
+    for key in ["stories", "points", "slabs", "columns", "beams", "walls", "loadsets", "existing_groups"]:
+        assert key in data
+    assert len(data["stories"]) == 2
+    assert "1" in data["points"]
+    assert data["points"]["1"]["x"] == 0
+
+
+def test_column_layout_tables(eng):
+    res = eng.run("column_layout_tables")
+    assert isinstance(res, dict)
+    assert "tables" in res
+    tables = res["tables"]
+    assert "Point Object Connectivity" in tables
+    assert "Frame Assignments - Summary" in tables
+    assert "columns" in tables["Point Object Connectivity"]
+    assert "values" in tables["Point Object Connectivity"]
+    assert len(tables["Point Object Connectivity"]["values"]) > 0
+    assert res["warnings"] == []
+
+    eurocode = tables["Concrete Column Design Summary - Eurocode 2-2004"]
+    assert "Design Section" in eurocode["columns"]
+    assert "Warnings" in eurocode["columns"]
+    assert "Errors" in eurocode["columns"]
+    error_index = eurocode["columns"].index("Errors")
+    assert eurocode["values"][0][error_index] == "Reinforcing required exceeds maximum allowed"
+
+    sp63 = tables["Concrete Column PMM Shear Envelope - SP 63 13330-2012"]
+    assert "PMM Ratio or Rebar %" in sp63["columns"]

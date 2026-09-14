@@ -57,7 +57,12 @@ def operation(name: str, needs: str = "tables", slow: bool = False):
 def to_list(value) -> List[str]:
     if value is None:
         return []
-    return [value] if isinstance(value, str) else list(value)
+    if isinstance(value, str):
+        return [value]
+    try:
+        return list(value)
+    except TypeError:
+        return [value]
 
 
 class Progress:

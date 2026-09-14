@@ -1,0 +1,614 @@
+{
+  "fixture_version": 2,
+  "design_family": "shear_wall",
+  "design_code": "ACI 318-19",
+  "source": "ETABS live example model, PID omitted",
+  "excluded": [
+    "license, serial and identifying Program Control fields"
+  ],
+  "tables": {
+    "Shear Wall Design Load Combination Data": {
+      "fields": [
+        {
+          "field_key": "ComboType",
+          "display_name": "Combo Type",
+          "unit": ""
+        },
+        {
+          "field_key": "ComboName",
+          "display_name": "Combo Name",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Strength",
+          "DConS1"
+        ],
+        [
+          "Strength",
+          "DConS2"
+        ]
+      ]
+    },
+    "Shear Wall Design Preferences - ACI 318-19": {
+      "fields": [
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "RebarMat",
+          "display_name": "Rebar Material",
+          "unit": ""
+        },
+        {
+          "field_key": "RebarShrMat",
+          "display_name": "Rebar Shear Material",
+          "unit": ""
+        },
+        {
+          "field_key": "Rho",
+          "display_name": "Design System Rho",
+          "unit": ""
+        },
+        {
+          "field_key": "Sds",
+          "display_name": "Design System Sds",
+          "unit": ""
+        },
+        {
+          "field_key": "ImpFactor",
+          "display_name": "Importance Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "Cd",
+          "display_name": "System Cd",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiTen",
+          "display_name": "Phi (Tension)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiCompTied",
+          "display_name": "Phi (Compression)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiShrTor",
+          "display_name": "Phi (Shear and Torsion)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiShrSeis",
+          "display_name": "Phi (Shear Seismic)",
+          "unit": ""
+        },
+        {
+          "field_key": "PMax",
+          "display_name": "PMax Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "NumCurves",
+          "display_name": "# Interaction Curves",
+          "unit": ""
+        },
+        {
+          "field_key": "NumPoints",
+          "display_name": "# Interaction Points",
+          "unit": ""
+        },
+        {
+          "field_key": "PTMax",
+          "display_name": "Edge Design PT-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "PCMax",
+          "display_name": "Edge Design PC-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "IPMax",
+          "display_name": "Section Design IP-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "IPMin",
+          "display_name": "Section Design IP-Min",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "Utlization Factor Limit",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Step-by-Step - All",
+          "A615Gr60",
+          "A615Gr60",
+          "1",
+          "0.5",
+          "1",
+          "5.5",
+          "0.9",
+          "0.65",
+          "0.75",
+          "0.6",
+          "0.8",
+          "24",
+          "11",
+          "0.06",
+          "0.04",
+          "0.04",
+          "0.0025",
+          "0.95"
+        ]
+      ]
+    },
+    "Shear Wall Pier Design Overwrites - ACI 318-19": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Pier",
+          "display_name": "Pier",
+          "unit": ""
+        },
+        {
+          "field_key": "DoDesign",
+          "display_name": "Design?",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "Seismic",
+          "display_name": "Seismic?",
+          "unit": ""
+        },
+        {
+          "field_key": "PierSecType",
+          "display_name": "Pier Section Type",
+          "unit": ""
+        },
+        {
+          "field_key": "EndBar",
+          "display_name": "End/Corner Bar Size",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBar",
+          "display_name": "Edge Bar Size",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBarSpc",
+          "display_name": "Edge Bar Spacing",
+          "unit": "m"
+        },
+        {
+          "field_key": "ClearCover",
+          "display_name": "Clear Cover",
+          "unit": "m"
+        },
+        {
+          "field_key": "Material",
+          "display_name": "Concrete Material",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignCheck",
+          "display_name": "Design/Check",
+          "unit": ""
+        },
+        {
+          "field_key": "CheckCompBlock",
+          "display_name": "Check Comp Block Depth for BZ?",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story4",
+          "P1",
+          "Program Determined",
+          "0",
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          0.0,
+          0.0,
+          "Program Determined",
+          "Design",
+          "No"
+        ]
+      ]
+    },
+    "Shear Wall Pier Design Summary - ACI 318-19": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Pier",
+          "display_name": "Pier Label",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignType",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBar",
+          "display_name": "Edge Rebar",
+          "unit": ""
+        },
+        {
+          "field_key": "EndBar",
+          "display_name": "End Rebar",
+          "unit": ""
+        },
+        {
+          "field_key": "BarSpacing",
+          "display_name": "Rebar Spacing",
+          "unit": "m"
+        },
+        {
+          "field_key": "ReinfPcent",
+          "display_name": "Required Reinf. Percentage",
+          "unit": "%"
+        },
+        {
+          "field_key": "CurrPcent",
+          "display_name": "Current Reinf. Percentage",
+          "unit": "%"
+        },
+        {
+          "field_key": "PierLeg",
+          "display_name": "Pier Leg",
+          "unit": ""
+        },
+        {
+          "field_key": "LegX1",
+          "display_name": "Leg X1",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegY1",
+          "display_name": "Leg Y1",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegX2",
+          "display_name": "Leg X2",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegY2",
+          "display_name": "Leg Y2",
+          "unit": "m"
+        },
+        {
+          "field_key": "Length",
+          "display_name": "Length",
+          "unit": "m"
+        },
+        {
+          "field_key": "Thickness",
+          "display_name": "Thickness",
+          "unit": "m"
+        },
+        {
+          "field_key": "ShearAv",
+          "display_name": "Shear Rebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "StrCompLft",
+          "display_name": "Compressive Stress Left",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "StrCompRt",
+          "display_name": "Compressive Stress Right",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "StrLimitLft",
+          "display_name": "Compressive Stress Limit Left",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "StrLimitRt",
+          "display_name": "Compressive Stress Limit Right",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "CDepthLeft",
+          "display_name": "C Depth Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "CLimitLeft",
+          "display_name": "C Limit Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "CDepthRight",
+          "display_name": "C Depth Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "CLimitRight",
+          "display_name": "C Limit Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "BZoneL",
+          "display_name": "Boundary Zone Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "BZoneR",
+          "display_name": "Boundary Zone Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "Warnings",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "Errors",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story4",
+          "P1",
+          "Top",
+          "Uniform",
+          "10",
+          "10",
+          0.25,
+          "0.82",
+          "0.26",
+          "Top Leg 1",
+          8.0,
+          0.0,
+          16.0,
+          0.0,
+          8.0,
+          0.25,
+          0.00063,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "No Message",
+          "No Message"
+        ],
+        [
+          "Story4",
+          "P1",
+          "Bottom",
+          "Uniform",
+          "10",
+          "10",
+          0.25,
+          "0.68",
+          "0.26",
+          "Bottom Leg 1",
+          8.0,
+          0.0,
+          16.0,
+          0.0,
+          8.0,
+          0.25,
+          0.00063,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          "No Message",
+          "No Message"
+        ]
+      ]
+    },
+    "Shear Wall Spandrel Design Summary - ACI 318-19": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Spandrel",
+          "display_name": "Spandrel",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": ""
+        },
+        {
+          "field_key": "TopRebar",
+          "display_name": "Top Rebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "TopRebarRat",
+          "display_name": "Top Rebar Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TopRebarCmb",
+          "display_name": "Top Rebar Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "MuTop",
+          "display_name": "Top Design Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "BotRebar",
+          "display_name": "Bottom Rebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "BotRebarRat",
+          "display_name": "Bottom Rebar Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "BotRebarCmb",
+          "display_name": "Bottom Rebar Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "MuBot",
+          "display_name": "Bottom Design Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "AVert",
+          "display_name": "Av Vert",
+          "unit": "m"
+        },
+        {
+          "field_key": "AHorz",
+          "display_name": "Av Horz",
+          "unit": "m"
+        },
+        {
+          "field_key": "ShearCombo",
+          "display_name": "Shear Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "Vu",
+          "display_name": "Design Shear",
+          "unit": "kN"
+        },
+        {
+          "field_key": "ADiag",
+          "display_name": "Av Diag",
+          "unit": "m²"
+        },
+        {
+          "field_key": "Mandatory",
+          "display_name": "Mandatory",
+          "unit": ""
+        },
+        {
+          "field_key": "ShrDiagCmb",
+          "display_name": "Diag Shear Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VuDiag",
+          "display_name": "Design Shear Diag.",
+          "unit": "kN"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "Warnings",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "Errors",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story4",
+          "S1",
+          "Left",
+          0.001016,
+          "0.004064",
+          "DConS2",
+          -342.321558,
+          null,
+          null,
+          null,
+          null,
+          0.0005600000000000001,
+          0.0,
+          "DConS2",
+          306.81466,
+          null,
+          null,
+          "DConS2",
+          306.81466,
+          "No Message",
+          "No Message"
+        ],
+        [
+          "Story4",
+          "S1",
+          "Right",
+          0.001976,
+          "0.007905",
+          "DConS2",
+          -623.865864,
+          null,
+          null,
+          null,
+          null,
+          0.0008,
+          0.0,
+          "DConS2",
+          375.89183,
+          null,
+          null,
+          "DConS2",
+          375.89183,
+          "No Message",
+          "No Message"
+        ]
+      ]
+    }
+  },
+  "read_errors": {}
+}

@@ -1,0 +1,977 @@
+{
+  "fixture_version": 2,
+  "design_family": "frame",
+  "design_code": "SP 63.13330-2012",
+  "table_count": 12,
+  "row_count": 3774,
+  "tables": {
+    "Concrete Beam Design Summary - SP 63 13330-2012": {
+      "row_count": 2470,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "DesignSect",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": "m"
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "AsTopCombo",
+          "display_name": "AsTopCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsMinTop",
+          "display_name": "AsMinTop",
+          "unit": "m²"
+        },
+        {
+          "field_key": "AsTop",
+          "display_name": "AsTop",
+          "unit": "m²"
+        },
+        {
+          "field_key": "AsBotCombo",
+          "display_name": "AsBotCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsMinBot",
+          "display_name": "AsMinBot",
+          "unit": "m²"
+        },
+        {
+          "field_key": "AsBot",
+          "display_name": "AsBot",
+          "unit": "m²"
+        },
+        {
+          "field_key": "VCombo",
+          "display_name": "VCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "VRebar",
+          "display_name": "VRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "TLngCombo",
+          "display_name": "TLngCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "TLngRebar",
+          "display_name": "TLngRebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "TTrnCombo",
+          "display_name": "TTrnCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "TTrnRebar",
+          "display_name": "TTrnRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "WarnMsg",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "ErrMsg",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Beam Flexure Envelope -  SP 63 13330-2012": {
+      "row_count": 285,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "MomentTop",
+          "display_name": "(-) Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "AsTopCombo",
+          "display_name": "(-) Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsTop",
+          "display_name": "As Top",
+          "unit": "m²"
+        },
+        {
+          "field_key": "MomentBot",
+          "display_name": "(+) Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "AsBotCombo",
+          "display_name": "(+) Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsBot",
+          "display_name": "As Bot",
+          "unit": "m²"
+        }
+      ]
+    },
+    "Concrete Beam Overwrites - SP 63-13330-2012": {
+      "row_count": 95,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "Unique Name",
+          "unit": ""
+        },
+        {
+          "field_key": "Type",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "LMajor",
+          "display_name": "Unbraced Length Ratio (Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "LMinor",
+          "display_name": "Unbraced Length Ratio (Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "Torsion",
+          "display_name": "Consider Torsion?",
+          "unit": ""
+        },
+        {
+          "field_key": "TanTheta",
+          "display_name": "(qsw,1*Z1)/(Rs*As,1)",
+          "unit": ""
+        },
+        {
+          "field_key": "CBarFracT",
+          "display_name": "Corner Rebar Fraction Top",
+          "unit": ""
+        },
+        {
+          "field_key": "CBarFracB",
+          "display_name": "Corner Rebar Fraction Bottom",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab3B",
+          "display_name": "Gamma_b3",
+          "unit": ""
+        },
+        {
+          "field_key": "IgnorePu",
+          "display_name": "Ignore Beneficial Pu for Beam Design?",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Beam Shear Envelope -  SP 63 13330-2012": {
+      "row_count": 285,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "Shear",
+          "display_name": "V",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VCombo",
+          "display_name": "V Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "At",
+          "display_name": "At",
+          "unit": "m"
+        },
+        {
+          "field_key": "TAt",
+          "display_name": "T for At",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "TComboAt",
+          "display_name": "T for At Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "TorsionAt",
+          "display_name": "At Torsion",
+          "unit": "m"
+        },
+        {
+          "field_key": "TAs",
+          "display_name": "T for As",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "TComboAs",
+          "display_name": "T for As Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "TorsionAs",
+          "display_name": "As Torsion",
+          "unit": "m²"
+        }
+      ]
+    },
+    "Concrete Column Design Summary - SP 63 13330-2012": {
+      "row_count": 193,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "DesignSect",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": "m"
+        },
+        {
+          "field_key": "DesignOpt",
+          "display_name": "DesignOpt",
+          "unit": ""
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "PMMRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMMCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsMin",
+          "display_name": "AsMin",
+          "unit": "m²"
+        },
+        {
+          "field_key": "As",
+          "display_name": "As",
+          "unit": "m²"
+        },
+        {
+          "field_key": "BarAs",
+          "display_name": "Mid Bar As",
+          "unit": "m²"
+        },
+        {
+          "field_key": "CornerBarAs",
+          "display_name": "CornerBarAs",
+          "unit": "m²"
+        },
+        {
+          "field_key": "VMajCombo",
+          "display_name": "VMajCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRebar",
+          "display_name": "VMajRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "VMinCombo",
+          "display_name": "VMinCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRebar",
+          "display_name": "VMinRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "WarnMsg",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "ErrMsg",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Column Overwrites - SP 63-13330-2012": {
+      "row_count": 63,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "Unique Name",
+          "unit": ""
+        },
+        {
+          "field_key": "Type",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "LMajor",
+          "display_name": "Unbraced Length Ratio (Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "LMinor",
+          "display_name": "Unbraced Length Ratio (Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "KMajor",
+          "display_name": "Effective Length Factor (K Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "KMinor",
+          "display_name": "Effective Length Factor (K Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "EtaMajor",
+          "display_name": "Moment Amplification Factor (Eta Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "EtaMinor",
+          "display_name": "Moment Amplification Factor (Eta Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "MinEcc",
+          "display_name": "Consider Minimum Eccentricity?",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Column PMM Shear Envelope -  SP 63 13330-2012": {
+      "row_count": 126,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "P",
+          "display_name": "P",
+          "unit": "kN"
+        },
+        {
+          "field_key": "MMajor",
+          "display_name": "M Major",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "MMinor",
+          "display_name": "M Minor",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "RatioRebar",
+          "display_name": "PMM Ratio or Rebar %",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Column Shear Envelope -  SP 63 13330-2012": {
+      "row_count": 126,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajor",
+          "display_name": "V Major",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VMajCombo",
+          "display_name": "V Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRebar",
+          "display_name": "At Major",
+          "unit": "m"
+        },
+        {
+          "field_key": "VMinor",
+          "display_name": "V Minor",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VMinCombo",
+          "display_name": "V Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRebar",
+          "display_name": "At Minor",
+          "unit": "m"
+        }
+      ]
+    },
+    "Concrete Frame Design Load Combination Data": {
+      "row_count": 4,
+      "fields": [
+        {
+          "field_key": "ComboType",
+          "display_name": "Combo Type",
+          "unit": ""
+        },
+        {
+          "field_key": "ComboName",
+          "display_name": "Combo Name",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Frame Design Preferences - SP 63-13330-2012": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "NumCurves",
+          "display_name": "# Interaction Curves",
+          "unit": ""
+        },
+        {
+          "field_key": "NumPoints",
+          "display_name": "# Interaction Points",
+          "unit": ""
+        },
+        {
+          "field_key": "MinEcc",
+          "display_name": "Minimum Eccentricity?",
+          "unit": ""
+        },
+        {
+          "field_key": "IgnorePu",
+          "display_name": "Ignore Beneficial Pu for Beam Design?",
+          "unit": ""
+        },
+        {
+          "field_key": "ConsiderT",
+          "display_name": "Consider Torsion?",
+          "unit": ""
+        },
+        {
+          "field_key": "TanTheta",
+          "display_name": "(qsw,1*Z1)/(Rs*As,1)",
+          "unit": ""
+        },
+        {
+          "field_key": "CBarFracT",
+          "display_name": "Corner Rebar Fraction Top",
+          "unit": ""
+        },
+        {
+          "field_key": "CBarFracB",
+          "display_name": "Corner Rebar Fraction Bottom",
+          "unit": ""
+        },
+        {
+          "field_key": "RelHumidity",
+          "display_name": "Relative Humidity (%)",
+          "unit": ""
+        },
+        {
+          "field_key": "MoistContnt",
+          "display_name": "Moisture Content (Fraction)",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab",
+          "display_name": "Gamma_b",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammabt",
+          "display_name": "Gamma_bt",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab1ST",
+          "display_name": "Gamma_b1 Short Term",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab1LT",
+          "display_name": "Gamma_b1 Long Term",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab2",
+          "display_name": "Gamma_b2",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab3B",
+          "display_name": "Gamma_b3 Beams",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab3C",
+          "display_name": "Gamma_b3 Columns",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab4",
+          "display_name": "Gamma_b4",
+          "unit": ""
+        },
+        {
+          "field_key": "Gammab5",
+          "display_name": "Gamma_b5",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaS",
+          "display_name": "Gamma_S",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaS1",
+          "display_name": "Gamma_S1",
+          "unit": ""
+        },
+        {
+          "field_key": "LLDF",
+          "display_name": "Live Load Duration Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "SLDF",
+          "display_name": "Snow Load Duration Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "ReliabilityF",
+          "display_name": "Reliability Factor, Gamma_n",
+          "unit": ""
+        },
+        {
+          "field_key": "mtrFlexural",
+          "display_name": "Strength Factor, m_tr,flexure",
+          "unit": ""
+        },
+        {
+          "field_key": "mtrShear",
+          "display_name": "Strength Factor, m_tr,shear",
+          "unit": ""
+        },
+        {
+          "field_key": "Seismicity",
+          "display_name": "Site Seismicity",
+          "unit": ""
+        },
+        {
+          "field_key": "CrackAnal",
+          "display_name": "Consider Crack Analysis?",
+          "unit": ""
+        },
+        {
+          "field_key": "CWLimitFull",
+          "display_name": "Crack Width Limit Full Load, a_crc, ult(mm)",
+          "unit": ""
+        },
+        {
+          "field_key": "CWLimitLong",
+          "display_name": "Crack Width Limit Long Term, a_crc,l,ult(mm)",
+          "unit": ""
+        },
+        {
+          "field_key": "LBarTop",
+          "display_name": "Longitudinal Rebar Size Top",
+          "unit": ""
+        },
+        {
+          "field_key": "LBarBot",
+          "display_name": "Longitudinal Rebar Size Bottom",
+          "unit": ""
+        },
+        {
+          "field_key": "LRebarRibbed",
+          "display_name": "Longitudinal Rebar Ribbed?",
+          "unit": ""
+        },
+        {
+          "field_key": "PatLLF",
+          "display_name": "Pattern Live Load Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "Utlization Factor Limit",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Joint Design Summary - SP 63 13330-2012": {
+      "row_count": 63,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "DesignSect",
+          "unit": ""
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajCombo",
+          "display_name": "BCMajCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajRatio",
+          "display_name": "BCMajRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinCombo",
+          "display_name": "BCMinCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinRatio",
+          "display_name": "BCMinRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajCombo",
+          "display_name": "JSMajCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajRatio",
+          "display_name": "JSMajRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinCombo",
+          "display_name": "JSMinCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinRatio",
+          "display_name": "JSMinRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "WarnMsg",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "ErrMsg",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Joint Envelope -  SP 63 13330-2012": {
+      "row_count": 63,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajCombo",
+          "display_name": "B/C Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajRatio",
+          "display_name": "B/C Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinCombo",
+          "display_name": "B/C Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinRatio",
+          "display_name": "B/C Minor Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajCombo",
+          "display_name": "JS Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajRatio",
+          "display_name": "JS Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinCombo",
+          "display_name": "JS Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinRatio",
+          "display_name": "JS Minor Ratio",
+          "unit": ""
+        }
+      ]
+    }
+  },
+  "status_message_values": {
+    "Concrete Beam Design Summary - SP 63 13330-2012::Status": {
+      "No Message": 1502,
+      "See ErrMsg": 968
+    },
+    "Concrete Beam Design Summary - SP 63 13330-2012::WarnMsg": {
+      "No Message": 2470
+    },
+    "Concrete Beam Design Summary - SP 63 13330-2012::ErrMsg": {
+      "No Message": 1502,
+      "Shear stress due to shear force and torsion together exceeds maximum allowed.": 713,
+      "Reinforcing required exceeds maximum allowed": 255
+    },
+    "Concrete Column Design Summary - SP 63 13330-2012::Status": {
+      "No Message": 193
+    },
+    "Concrete Column Design Summary - SP 63 13330-2012::WarnMsg": {
+      "No Message": 193
+    },
+    "Concrete Column Design Summary - SP 63 13330-2012::ErrMsg": {
+      "No Message": 193
+    },
+    "Concrete Joint Design Summary - SP 63 13330-2012::Status": {
+      "Joint check not done.": 63
+    },
+    "Concrete Joint Design Summary - SP 63 13330-2012::WarnMsg": {
+      "No Message": 63
+    },
+    "Concrete Joint Design Summary - SP 63 13330-2012::ErrMsg": {
+      "No Message": 63
+    }
+  },
+  "read_errors": {}
+}

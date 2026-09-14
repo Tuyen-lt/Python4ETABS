@@ -1,0 +1,908 @@
+{
+  "fixture_version": 2,
+  "design_family": "frame",
+  "design_code": "ACI 318-19",
+  "table_count": 12,
+  "row_count": 3772,
+  "tables": {
+    "Concrete Beam Design Summary - ACI 318-19": {
+      "row_count": 2470,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "DesignSect",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": "m"
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "AsTopCombo",
+          "display_name": "AsTopCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsMinTop",
+          "display_name": "AsMinTop",
+          "unit": "m²"
+        },
+        {
+          "field_key": "AsTop",
+          "display_name": "AsTop",
+          "unit": "m²"
+        },
+        {
+          "field_key": "AsBotCombo",
+          "display_name": "AsBotCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsMinBot",
+          "display_name": "AsMinBot",
+          "unit": "m²"
+        },
+        {
+          "field_key": "AsBot",
+          "display_name": "AsBot",
+          "unit": "m²"
+        },
+        {
+          "field_key": "VCombo",
+          "display_name": "VCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "VRebar",
+          "display_name": "VRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "TLngCombo",
+          "display_name": "TLngCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "TLngRebar",
+          "display_name": "TLngRebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "TTrnCombo",
+          "display_name": "TTrnCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "TTrnRebar",
+          "display_name": "TTrnRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "WarnMsg",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "ErrMsg",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Beam Flexure Envelope - ACI 318-19": {
+      "row_count": 285,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "MomentTop",
+          "display_name": "(-) Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "AsTopCombo",
+          "display_name": "(-) Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsTop",
+          "display_name": "As Top",
+          "unit": "m²"
+        },
+        {
+          "field_key": "MomentBot",
+          "display_name": "(+) Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "AsBotCombo",
+          "display_name": "(+) Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsBot",
+          "display_name": "As Bot",
+          "unit": "m²"
+        }
+      ]
+    },
+    "Concrete Beam Overwrites - ACI 318-19": {
+      "row_count": 95,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "Unique Name",
+          "unit": ""
+        },
+        {
+          "field_key": "Type",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "LMajor",
+          "display_name": "Unbraced Length Ratio (Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "LMinor",
+          "display_name": "Unbraced Length Ratio (Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "Torsion",
+          "display_name": "Consider Torsion?",
+          "unit": ""
+        },
+        {
+          "field_key": "IgnorePu",
+          "display_name": "Ignore Beneficial Pu for Beam Design?",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Beam Shear Envelope - ACI 318-19": {
+      "row_count": 285,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "Shear",
+          "display_name": "V",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VCombo",
+          "display_name": "V Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "At",
+          "display_name": "At",
+          "unit": "m"
+        },
+        {
+          "field_key": "TAt",
+          "display_name": "T for At",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "TComboAt",
+          "display_name": "T for At Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "TorsionAt",
+          "display_name": "At Torsion",
+          "unit": "m"
+        },
+        {
+          "field_key": "TAs",
+          "display_name": "T for As",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "TComboAs",
+          "display_name": "T for As Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "TorsionAs",
+          "display_name": "As Torsion",
+          "unit": "m²"
+        }
+      ]
+    },
+    "Concrete Column Design Summary - ACI 318-19": {
+      "row_count": 193,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "DesignSect",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": "m"
+        },
+        {
+          "field_key": "DesignOpt",
+          "display_name": "DesignOpt",
+          "unit": ""
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "PMMRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMMCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "AsMin",
+          "display_name": "AsMin",
+          "unit": "m²"
+        },
+        {
+          "field_key": "As",
+          "display_name": "As",
+          "unit": "m²"
+        },
+        {
+          "field_key": "BarAs",
+          "display_name": "Mid Bar As",
+          "unit": "m²"
+        },
+        {
+          "field_key": "CornerBarAs",
+          "display_name": "CornerBarAs",
+          "unit": "m²"
+        },
+        {
+          "field_key": "VMajCombo",
+          "display_name": "VMajCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRebar",
+          "display_name": "VMajRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "VMinCombo",
+          "display_name": "VMinCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRebar",
+          "display_name": "VMinRebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "WarnMsg",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "ErrMsg",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Column Overwrites - ACI 318-19": {
+      "row_count": 63,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "Unique Name",
+          "unit": ""
+        },
+        {
+          "field_key": "Type",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "LMajor",
+          "display_name": "Unbraced Length Ratio (Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "LMinor",
+          "display_name": "Unbraced Length Ratio (Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "KMajor",
+          "display_name": "Effective Length Factor (K Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "KMinor",
+          "display_name": "Effective Length Factor (K Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "CmMajor",
+          "display_name": "Moment Coefficient (Cm Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "CmMinor",
+          "display_name": "Moment Coefficient (Cm Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "DnsMajor",
+          "display_name": "Non Sway Moment Factor (Dns Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "DnsMinor",
+          "display_name": "Non Sway Moment Factor (Dns Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "DsMajor",
+          "display_name": "Sway Moment Factor (Ds Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "DsMinor",
+          "display_name": "Sway Moment Factor (Ds Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "MinEcc",
+          "display_name": "Consider Minimum Eccentricity?",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Column PMM Envelope - ACI 318-19": {
+      "row_count": 126,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "P",
+          "display_name": "P",
+          "unit": "kN"
+        },
+        {
+          "field_key": "MMajor",
+          "display_name": "M Major",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "MMinor",
+          "display_name": "M Minor",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "RatioRebar",
+          "display_name": "PMM Ratio or Rebar %",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Column Shear Envelope - ACI 318-19": {
+      "row_count": 126,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Location",
+          "display_name": "Location",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajor",
+          "display_name": "V Major",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VMajCombo",
+          "display_name": "V Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRebar",
+          "display_name": "At Major",
+          "unit": "m"
+        },
+        {
+          "field_key": "VMinor",
+          "display_name": "V Minor",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VMinCombo",
+          "display_name": "V Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRebar",
+          "display_name": "At Minor",
+          "unit": "m"
+        }
+      ]
+    },
+    "Concrete Frame Design Load Combination Data": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "ComboType",
+          "display_name": "Combo Type",
+          "unit": ""
+        },
+        {
+          "field_key": "ComboName",
+          "display_name": "Combo Name",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Frame Design Preferences - ACI 318-19": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "NumCurves",
+          "display_name": "# Interaction Curves",
+          "unit": ""
+        },
+        {
+          "field_key": "NumPoints",
+          "display_name": "# Interaction Points",
+          "unit": ""
+        },
+        {
+          "field_key": "MinEcc",
+          "display_name": "Minimum Eccentricity?",
+          "unit": ""
+        },
+        {
+          "field_key": "Design4BCCR",
+          "display_name": "Design for BCCR?",
+          "unit": ""
+        },
+        {
+          "field_key": "IgnorePu",
+          "display_name": "Ignore Beneficial Pu for Beam Design?",
+          "unit": ""
+        },
+        {
+          "field_key": "SDC",
+          "display_name": "Seismic Design Category",
+          "unit": ""
+        },
+        {
+          "field_key": "Omega0",
+          "display_name": "Design System Omega0",
+          "unit": ""
+        },
+        {
+          "field_key": "Rho",
+          "display_name": "Design System Rho",
+          "unit": ""
+        },
+        {
+          "field_key": "Sds",
+          "display_name": "Design System Sds",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiTen",
+          "display_name": "Phi (Tension)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiCompTied",
+          "display_name": "Phi (Compression Tied)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiCompSpir",
+          "display_name": "Phi (Compression Spiral)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiShrTor",
+          "display_name": "Phi (Shear and Torsion)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiShrSeis",
+          "display_name": "Phi (Shear Seismic)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiShrJnt",
+          "display_name": "Phi (Shear Joint)",
+          "unit": ""
+        },
+        {
+          "field_key": "PatLLF",
+          "display_name": "Pattern Live Load Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "Utlization Factor Limit",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Joint Design Summary - ACI 318-19": {
+      "row_count": 63,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "DesignSect",
+          "unit": ""
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajCombo",
+          "display_name": "BCMajCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajRatio",
+          "display_name": "BCMajRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinCombo",
+          "display_name": "BCMinCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinRatio",
+          "display_name": "BCMinRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajCombo",
+          "display_name": "JSMajCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajRatio",
+          "display_name": "JSMajRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinCombo",
+          "display_name": "JSMinCombo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinRatio",
+          "display_name": "JSMinRatio",
+          "unit": ""
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "WarnMsg",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "ErrMsg",
+          "unit": ""
+        }
+      ]
+    },
+    "Concrete Joint Envelope - ACI 318-19": {
+      "row_count": 63,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajCombo",
+          "display_name": "B/C Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMajRatio",
+          "display_name": "B/C Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinCombo",
+          "display_name": "B/C Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "BCMinRatio",
+          "display_name": "B/C Minor Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajCombo",
+          "display_name": "JS Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMajRatio",
+          "display_name": "JS Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinCombo",
+          "display_name": "JS Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "JSMinRatio",
+          "display_name": "JS Minor Ratio",
+          "unit": ""
+        }
+      ]
+    }
+  },
+  "status_message_values": {
+    "Concrete Beam Design Summary - ACI 318-19::Status": {
+      "No Message": 2362,
+      "See ErrMsg": 108
+    },
+    "Concrete Beam Design Summary - ACI 318-19::WarnMsg": {
+      "No Message": 2470
+    },
+    "Concrete Beam Design Summary - ACI 318-19::ErrMsg": {
+      "No Message": 2362,
+      "Shear stress due to shear force and torsion together exceeds maximum allowed.": 108
+    },
+    "Concrete Column Design Summary - ACI 318-19::Status": {
+      "No Message": 159,
+      "See Errors": 34
+    },
+    "Concrete Column Design Summary - ACI 318-19::WarnMsg": {
+      "No Message": 193
+    },
+    "Concrete Column Design Summary - ACI 318-19::ErrMsg": {
+      "No Message": 159,
+      "Reinforcing required exceeds maximum allowed": 34
+    },
+    "Concrete Joint Design Summary - ACI 318-19::Status": {
+      "Joint check not done.": 63
+    },
+    "Concrete Joint Design Summary - ACI 318-19::WarnMsg": {
+      "No Message": 63
+    },
+    "Concrete Joint Design Summary - ACI 318-19::ErrMsg": {
+      "No Message": 63
+    }
+  },
+  "read_errors": {}
+}

@@ -38,7 +38,7 @@ def test_excel_source_filters_output_case(export_xlsx):
 
 def test_excel_source_missing_table_and_file(export_xlsx, tmp_path):
     with pytest.raises(TableNotFound):
-        ExcelSource(export_xlsx).table("Story Drifts")
+        ExcelSource(export_xlsx).table("Definitely Missing Table")
     with pytest.raises(SourceError):
         ExcelSource(tmp_path / "missing.xlsx")
 

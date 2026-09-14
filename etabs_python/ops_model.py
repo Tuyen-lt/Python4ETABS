@@ -4,7 +4,7 @@ All work on every source (needs="tables").
 """
 from bisect import bisect_left
 from numbers import Real
-from typing import Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional
 
 import pandas as pd
 
@@ -253,3 +253,479 @@ def area_properties(ctx: Context) -> pd.DataFrame:
     if "Material" in df.columns:
         df = _merge(df, mats, "Material")
     return _finish(df, "area_properties", *(parts + [mats]))
+
+
+@operation("loadset_plan_data", needs="tables", slow=True)
+def loadset_plan_data(ctx: Context, story: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Consolidated plan geometry and loadset definitions for web canvas visualization.
+    Returns stories, points, slabs with loadset assignments, columns, beams, walls, and loadset definitions.
+    Section dimensions and wall thicknesses are scaled to the general length unit (e.g. meters) for drawing.
+    """
+    ctx.progress.start(total=10, desc="Extracting ETABS model data")
+
+    # 1. Stories
+    ctx.progress.step(msg="Reading story definitions...")
+    try:
+        st_df = stories(ctx)
+        story_list = st_df[["Story", "Height", "Elevation"]].to_dict(orient="records")
+    except Exception:
+        story_list = []
+
+    # 2. Points lookup
+    ctx.progress.step(msg="Reading point coordinates...")
+    pts_df = ctx.optional_table("Point Object Connectivity")
+    points: Dict[str, Dict[str, float]] = {}
+    if not pts_df.empty and "UniqueName" in pts_df.columns:
+        for _, r in pts_df.iterrows():
+            try:
+                uname = str(r["UniqueName"]).strip()
+                points[uname] = {
+                    "x": float(r.get("X", 0.0)),
+                    "y": float(r.get("Y", 0.0)),
+                    "z": float(r.get("Z", 0.0))
+                }
+            except (ValueError, TypeError):
+                continue
+
+    # Scale factor for section length (e.g. mm) to general length (e.g. m)
+    sec_scale = 0.001 if ctx.units.section == "mm" and ctx.units.length == "m" else 1.0
+
+    # 3. Section dimensions for frame members
+    ctx.progress.step(msg="Reading frame section dimensions...")
+    section_dims: Dict[str, Dict[str, Any]] = {}
+    rect_df = ctx.optional_table("Frame Section Property Definitions - Concrete Rectangular")
+    if not rect_df.empty and "Name" in rect_df.columns:
+        for _, r in rect_df.iterrows():
+            try:
+                section_dims[str(r["Name"]).strip()] = {
+                    "w": float(r.get("Width", 0.3)) * sec_scale,
+                    "d": float(r.get("Depth", 0.3)) * sec_scale,
+                    "circle": False
+                }
+            except (ValueError, TypeError):
+                pass
+
+    circ_df = ctx.optional_table("Frame Section Property Definitions - Concrete Circle")
+    if not circ_df.empty and "Name" in circ_df.columns:
+        for _, r in circ_df.iterrows():
+            try:
+                dia = float(r.get("Diameter", 0.4)) * sec_scale
+                section_dims[str(r["Name"]).strip()] = {
+                    "w": dia,
+                    "d": dia,
+                    "circle": True
+                }
+            except (ValueError, TypeError):
+                pass
+
+    steel_df = ctx.optional_table("Frame Section Property Definitions - Steel I/Wide Flange")
+    if steel_df.empty:
+        steel_df = ctx.optional_table("Frame Section Property Definitions - Steel I Wide Flange")
+    if not steel_df.empty and "Name" in steel_df.columns:
+        for _, r in steel_df.iterrows():
+            try:
+                w = float(r.get("TopFlangeWidth", r.get("Width", 0.2))) * sec_scale
+                d = float(r.get("TotalDepth", r.get("Depth", 0.3))) * sec_scale
+                section_dims[str(r["Name"]).strip()] = {
+                    "w": w,
+                    "d": d,
+                    "circle": False
+                }
+            except (ValueError, TypeError):
+                pass
+
+    # 4. Frame assignments and rotation angles
+    ctx.progress.step(msg="Reading frame assignments and orientations...")
+    frame_angles: Dict[str, float] = {}
+    frame_sections: Dict[str, str] = {}
+    fa_df = ctx.optional_table("Frame Assignments - Summary")
+    if not fa_df.empty and "UniqueName" in fa_df.columns:
+        for _, r in fa_df.iterrows():
+            uname = str(r["UniqueName"]).strip()
+            sec = r.get("AnalysisSect") or r.get("DesignSection") or r.get("SectionProperty")
+            if pd.notna(sec):
+                frame_sections[uname] = str(sec).strip()
+            ang = r.get("AxisAngle")
+            if pd.notna(ang):
+                try:
+                    frame_angles[uname] = float(ang)
+                except (ValueError, TypeError):
+                    pass
+
+    fa_axes = ctx.optional_table("Frame Assignments - Local Axes")
+    if not fa_axes.empty and "UniqueName" in fa_axes.columns:
+        for _, r in fa_axes.iterrows():
+            uname = str(r["UniqueName"]).strip()
+            ang = r.get("Angle")
+            if pd.notna(ang):
+                try:
+                    frame_angles[uname] = float(ang)
+                except (ValueError, TypeError):
+                    pass
+
+    # 5. Columns
+    ctx.progress.step(msg="Reading column connectivity...")
+    columns = []
+    col_df = ctx.optional_table("Column Object Connectivity")
+    if not col_df.empty and "UniqueName" in col_df.columns:
+        for _, r in col_df.iterrows():
+            st_name = str(r.get("Story", "")).strip()
+            if story and st_name != story:
+                continue
+            uname = str(r["UniqueName"]).strip()
+            pI = points.get(str(r.get("UniquePtI", "")).strip())
+            pJ = points.get(str(r.get("UniquePtJ", "")).strip())
+            sec = frame_sections.get(uname)
+            dims = section_dims.get(sec or "")
+            columns.append({
+                "uniqueName": uname,
+                "kind": "Column",
+                "story": st_name,
+                "section": sec,
+                "width": dims["w"] if dims else None,
+                "depth": dims["d"] if dims else None,
+                "circle": dims["circle"] if dims else False,
+                "angle": frame_angles.get(uname, 0.0),
+                "points": [p for p in (pI, pJ) if p]
+            })
+
+    # 6. Beams
+    ctx.progress.step(msg="Reading beam connectivity...")
+    beams = []
+    beam_df = ctx.optional_table("Beam Object Connectivity")
+    if not beam_df.empty and "UniqueName" in beam_df.columns:
+        for _, r in beam_df.iterrows():
+            st_name = str(r.get("Story", "")).strip()
+            if story and st_name != story:
+                continue
+            uname = str(r["UniqueName"]).strip()
+            pI = points.get(str(r.get("UniquePtI", "")).strip())
+            pJ = points.get(str(r.get("UniquePtJ", "")).strip())
+            sec = frame_sections.get(uname)
+            dims = section_dims.get(sec or "")
+            beams.append({
+                "uniqueName": uname,
+                "kind": "Beam",
+                "story": st_name,
+                "section": sec,
+                "width": dims["w"] if dims else None,
+                "points": [p for p in (pI, pJ) if p]
+            })
+
+    # 7. Walls
+    ctx.progress.step(msg="Reading wall connectivity and thickness...")
+    wall_props: Dict[str, float] = {}
+    wp_df = ctx.optional_table("Wall Property Definitions - Specified")
+    if not wp_df.empty and "Name" in wp_df.columns:
+        for _, r in wp_df.iterrows():
+            try:
+                thk = r.get("WallThickness") or r.get("Thickness")
+                if pd.notna(thk):
+                    wall_props[str(r["Name"]).strip()] = float(thk) * sec_scale
+            except (ValueError, TypeError):
+                pass
+
+    area_sections: Dict[str, str] = {}
+    aa_df = ctx.optional_table("Area Assignments - Summary")
+    if not aa_df.empty and "UniqueName" in aa_df.columns:
+        for _, r in aa_df.iterrows():
+            uname = str(r["UniqueName"]).strip()
+            sec = r.get("SectProp") or r.get("SectionProperty")
+            if pd.notna(sec):
+                area_sections[uname] = str(sec).strip()
+
+    walls = []
+    wall_df = ctx.optional_table("Wall Object Connectivity")
+    if not wall_df.empty and "UniqueName" in wall_df.columns:
+        for _, r in wall_df.iterrows():
+            st_name = str(r.get("Story", "")).strip()
+            if story and st_name != story:
+                continue
+            uname = str(r["UniqueName"]).strip()
+            p1 = points.get(str(r.get("UniquePt1", "")).strip())
+            p2 = points.get(str(r.get("UniquePt2", "")).strip())
+            p3 = points.get(str(r.get("UniquePt3", "")).strip())
+            p4 = points.get(str(r.get("UniquePt4", "")).strip())
+            sec = area_sections.get(uname)
+            thk = wall_props.get(sec or "")
+
+            plan_pts = []
+            for p in (p1, p2, p3, p4):
+                if p and not any((p["x"] - q["x"]) ** 2 + (p["y"] - q["y"]) ** 2 < 0.0004 for q in plan_pts):
+                    plan_pts.append(p)
+            inclined = bool(p1 and p2 and (len(plan_pts) >= 3 or not p3 or not p4 or (
+                (p1["x"] - p2["x"]) ** 2 + (p1["y"] - p2["y"]) ** 2 < 0.0004
+            )))
+
+            walls.append({
+                "uniqueName": uname,
+                "kind": "Wall",
+                "story": st_name,
+                "section": sec,
+                "thickness": thk,
+                "inclinedShell": inclined,
+                "points": [p for p in (p1, p2) if p]
+            })
+
+    # 8. Slabs (Floors) and Loadset assignments
+    ctx.progress.step(msg="Processing floor slabs and loadset assignments...")
+    loadset_assign_df = ctx.optional_table("Area Load Assignments - Uniform Load Sets")
+    loadset_by_name: Dict[str, str] = {}
+    if not loadset_assign_df.empty and "UniqueName" in loadset_assign_df.columns:
+        for _, r in loadset_assign_df.iterrows():
+            uname = str(r["UniqueName"]).strip()
+            ls = r.get("LoadSet") or r.get("LoadSetName") or r.get("Name")
+            if pd.notna(ls) and str(ls).strip():
+                loadset_by_name[uname] = str(ls).strip()
+
+    floor_df = ctx.optional_table("Floor Object Connectivity")
+    slabs_dict: Dict[str, Dict[str, Any]] = {}
+    current_name = None
+    point_keys = ["UniquePt1", "UniquePt2", "UniquePt3", "UniquePt4"]
+    if not floor_df.empty:
+        for _, r in floor_df.iterrows():
+            raw_name = r.get("UniqueName")
+            if pd.notna(raw_name) and str(raw_name).strip():
+                current_name = str(raw_name).strip()
+                if current_name not in slabs_dict:
+                    slabs_dict[current_name] = {
+                        "uniqueName": current_name,
+                        "story": str(r.get("Story", "")).strip(),
+                        "vertexIds": []
+                    }
+            if current_name is None:
+                continue
+            for k in point_keys:
+                pid = r.get(k)
+                if pd.notna(pid) and str(pid).strip():
+                    slabs_dict[current_name]["vertexIds"].append(str(pid).strip())
+
+    slabs = []
+    for uname, slab in slabs_dict.items():
+        if story and slab["story"] != story:
+            continue
+        pts = [points[pid] for pid in slab["vertexIds"] if pid in points]
+        slabs.append({
+            "uniqueName": uname,
+            "kind": "Slab",
+            "story": slab["story"],
+            "loadset": loadset_by_name.get(uname),
+            "vertexIds": slab["vertexIds"],
+            "points": pts
+        })
+
+    # 9. Loadset definitions
+    ctx.progress.step(msg="Reading shell uniform load sets...")
+    loadset_defs: Dict[str, List[Dict[str, Any]]] = {}
+    ls_df = ctx.optional_table("Shell Uniform Load Sets")
+    if not ls_df.empty:
+        for _, r in ls_df.iterrows():
+            name = str(r.get("Name") or r.get("LoadSet") or "").strip()
+            if not name:
+                continue
+            pat = str(r.get("LoadPattern") or r.get("Pattern") or "").strip()
+            val = r.get("LoadValue") or r.get("Value")
+            try:
+                val_num = float(val) if pd.notna(val) else None
+            except (ValueError, TypeError):
+                val_num = None
+            loadset_defs.setdefault(name, []).append({"pattern": pat, "value": val_num})
+
+    # 10. Existing groups in ETABS
+    ctx.progress.step(msg="Checking existing ETABS groups...")
+    existing_groups: Dict[str, Optional[int]] = {}
+    grp_df = ctx.optional_table("Group Definitions")
+    if not grp_df.empty:
+        for _, r in grp_df.iterrows():
+            gname = str(r.get("Name") or r.get("GroupName") or "").strip()
+            if gname:
+                gcol = r.get("Color")
+                try:
+                    existing_groups[gname] = int(gcol) if pd.notna(gcol) else None
+                except (ValueError, TypeError):
+                    existing_groups[gname] = None
+
+    return {
+        "stories": story_list,
+        "points": points,
+        "slabs": slabs,
+        "columns": columns,
+        "beams": beams,
+        "walls": walls,
+        "loadsets": loadset_defs,
+        "existing_groups": existing_groups
+    }
+
+
+@operation("column_layout_tables", needs="tables", slow=True)
+def column_layout_tables(ctx: Context) -> Dict[str, Any]:
+    """
+    Extract all raw tables required by the Column & Wall Layout HTML viewer.
+    Returns tables as { "tables": { table_name: { "columns": [...], "values": [...] } } }.
+    """
+    table_candidates = [
+        "Point Object Connectivity",
+        "Frame Assignments - Summary",
+        "Column Object Connectivity",
+        "Beam Object Connectivity",
+        "Frame Section Property Definitions - Summary",
+        "Wall Object Connectivity",
+        "Wall Property Definitions - Specified",
+        "Area Assignments - Summary",
+        "Area Assignments - Pier Labels",
+        "Group Assignments",
+        "Group Definitions",
+        "Story Definitions",
+    ]
+    design_prefixes = [
+        "Concrete Frame Design Load Combination Data",
+        "Concrete Frame Design Preferences",
+        "Concrete Beam Overwrites",
+        "Concrete Column Design Summary",
+        "Concrete Column PMM Shear Envelope",
+        "Concrete Column PMM Envelope",
+        "Concrete Column Shear Envelope",
+        "Concrete Column Overwrites",
+        "Concrete Beam Design Summary",
+        "Concrete Beam Flexure Envelope",
+        "Concrete Beam Shear Envelope",
+        "Concrete Joint Design Summary",
+        "Concrete Joint Envelope",
+        "Shear Wall Design Load Combination Data",
+        "Shear Wall Design Preferences",
+        "Shear Wall Pier Design Overwrites",
+        "Shear Wall Pier Design Summary",
+        "Shear Wall Spandrel Design Overwrites",
+        "Shear Wall Spandrel Design Summary",
+        "Steel Frame Design Preferences",
+        "Steel Frame Design Overwrites",
+        "Steel Frame Design Summary",
+        "Steel Column Envelope",
+        "Steel Beam Envelope",
+    ]
+
+    available_tables: List[str] = []
+    if hasattr(ctx.source, "tables"):
+        try:
+            available_tables = list(ctx.source.tables())
+        except Exception:
+            available_tables = []
+
+    # Resolve design tables by their code-independent prefix. ETABS appends the
+    # active design code (ACI, Eurocode, AISC, etc.) to most table names.
+    resolved_design_tables: List[str] = []
+    for prefix in design_prefixes:
+        matched = [t for t in available_tables if t.lower().startswith(prefix.lower())]
+        if matched:
+            resolved_design_tables.extend(matched)
+        elif not available_tables:
+            # A custom TableSource may not implement table discovery. Retain the
+            # old best-effort behaviour for that case only.
+            resolved_design_tables.append(prefix)
+
+    all_targets = list(dict.fromkeys(table_candidates + resolved_design_tables))
+    ctx.progress.start(total=len(all_targets), desc="Extracting column and wall layout tables")
+
+    KNOWN_FIELD_KEY_TO_NAME = {
+        "Frame Assignments - Summary": {
+            "AnalysisSect": "Analysis Section",
+            "DesignSect": "Design Section",
+            "AxisAngle": "Axis Angle",
+            "AutoSelect": "Auto Select",
+            "Type": "Design Type",
+            "MaxStaSpcg": "Max Station Spacing",
+            "MinNumSta": "Min Number Stations",
+            "UserOffsets": "User Offsets",
+            "AddedMass": "Added Mass",
+        },
+        "Wall Property Definitions - Specified": {
+            "Thickness": "Wall Thickness",
+            "ModelType": "Modeling Type",
+            "RigidZone": "Include Auto Rigid Zone?",
+            "f11Mod": "f11 Modifier",
+            "f22Mod": "f22 Modifier",
+            "f12Mod": "f12 Modifier",
+            "m11Mod": "m11 Modifier",
+            "m22Mod": "m22 Modifier",
+            "m12Mod": "m12 Modifier",
+            "v13Mod": "v13 Modifier",
+            "v23Mod": "v23 Modifier",
+            "MMod": "Mass Modifier",
+            "WMod": "Weight Modifier",
+        },
+        "Area Assignments - Summary": {
+            "SectProp": "Section Property",
+            "PropType": "Property Type",
+            "AxisAngle": "Axis Angle",
+            "AddedMass": "Added Mass",
+        },
+        "Group Assignments": {
+            "GroupName": "Group Name",
+            "ObjectType": "Object Type",
+            "UniqueName": "Object Unique Name",
+        },
+        "Column Object Connectivity": {
+            "UniqueName": "Unique Name",
+        },
+        "Beam Object Connectivity": {
+            "UniqueName": "Unique Name",
+        },
+        "Area Assignments - Pier Labels": {
+            "PierName": "Pier Name",
+        },
+    }
+    # Common design-result keys whose ETABS display names are inconsistent
+    # across code/version combinations. These canonical names are also used
+    # when a non-live source cannot provide GetAllFieldsInTable metadata.
+    COMMON_DESIGN_FIELD_KEY_TO_NAME = {
+        "DesignSect": "Design Section",
+        "WarnMsg": "Warnings",
+        "ErrMsg": "Errors",
+        "RatioRebar": "PMM Ratio or Rebar %",
+        "Pier": "Pier Label",
+        "ReinfPcent": "Required Reinf. Percentage",
+        "ShearAv": "Shear Rebar",
+        "MMajRatio": "M Major Ratio",
+        "MMinRatio": "M Minor Ratio",
+    }
+
+    out_tables: Dict[str, Dict[str, Any]] = {}
+    read_warnings: List[Dict[str, str]] = []
+
+    for name in all_targets:
+        ctx.progress.step(msg=f"Reading {name}...")
+        try:
+            df = ctx.optional_table(name)
+            if not df.empty:
+                orig_units = dict(df.attrs.get("units", {}))
+                field_map = dict(COMMON_DESIGN_FIELD_KEY_TO_NAME)
+                field_map.update(KNOWN_FIELD_KEY_TO_NAME.get(name, {}))
+                unit_map = {}
+                if hasattr(ctx.source, "sap_model") and ctx.source.sap_model is not None:
+                    try:
+                        ret = ctx.source.sap_model.DatabaseTables.GetAllFieldsInTable(name)
+                        if ret[-1] == 0:
+                            field_map.update(dict(zip(ret[2], ret[3])))
+                            unit_map = dict(zip(ret[3], ret[5]))
+                    except Exception:
+                        pass
+                if field_map:
+                    df = df.rename(columns=field_map)
+                clean_df = df.astype(object).where(pd.notna(df), None)
+                cols = list(clean_df.columns)
+                renamed_orig_units = {field_map.get(k, k): v for k, v in orig_units.items()}
+                col_units = [renamed_orig_units.get(c, unit_map.get(c, "")) for c in cols]
+                out_tables[name] = {
+                    "columns": cols,
+                    "units": col_units,
+                    "values": clean_df.values.tolist(),
+                }
+        except Exception as exc:
+            read_warnings.append({
+                "table": name,
+                "error_type": type(exc).__name__,
+                "message": str(exc),
+            })
+
+    return {"tables": out_tables, "warnings": read_warnings}

@@ -1,6 +1,6 @@
 """
 Force operations read from ETABS results tables (needs="tables"):
-Element Forces - Beams / Columns, Pier Forces, Joint Reactions.
+Element Forces, reactions, story response, modal results and mass/stiffness summaries.
 """
 from typing import List, Optional
 
@@ -17,7 +17,7 @@ def _filter(df: pd.DataFrame, column: str, values) -> pd.DataFrame:
     values = [str(v) for v in to_list(values)]
     if not values:
         return df
-    return _finish(df[df[column].isin(values)].reset_index(drop=True), df.attrs.get("table", ""), df)
+    return _finish(df[df[column].astype(str).isin(values)].reset_index(drop=True), df.attrs.get("table", ""), df)
 
 
 @operation("beam_forces", slow=True)
@@ -43,6 +43,90 @@ def pier_forces(ctx: Context, piers=None, stories=None, cases=None, combos=None)
 def joint_reactions(ctx: Context, names=None, cases=None, combos=None) -> pd.DataFrame:
     """Support reactions FX, FY, FZ, MX, MY, MZ (Joint Reactions)."""
     return _filter(ctx.table("Joint Reactions", cases, combos), "UniqueName", names)
+
+
+@operation("base_reactions")
+def base_reactions(ctx: Context, cases=None, combos=None) -> pd.DataFrame:
+    """Resultant base reactions FX, FY, FZ, MX, MY, MZ and resultant location."""
+    return ctx.table("Base Reactions", cases, combos)
+
+
+@operation("story_drifts")
+def story_drifts(ctx: Context, stories=None, cases=None, combos=None) -> pd.DataFrame:
+    """Point-based story drift ratios and governing point/location by direction."""
+    return _filter(ctx.table("Story Drifts", cases, combos), "Story", stories)
+
+
+@operation("story_max_over_average_drifts")
+def story_max_over_average_drifts(ctx: Context, stories=None, cases=None, combos=None) -> pd.DataFrame:
+    """Maximum drift, average drift and max/average ratio by story and direction."""
+    return _filter(ctx.table("Story Max Over Avg Drifts", cases, combos), "Story", stories)
+
+
+@operation("diaphragm_max_over_average_drifts")
+def diaphragm_max_over_average_drifts(ctx: Context, stories=None, cases=None, combos=None) -> pd.DataFrame:
+    """Diaphragm maximum/average drift ratios and governing coordinates."""
+    return _filter(ctx.table("Diaphragm Max Over Avg Drifts", cases, combos), "Story", stories)
+
+
+def _modal(ctx: Context, table: str, cases=None, modes=None) -> pd.DataFrame:
+    df = _filter(ctx.table(table), "Case", cases)
+    return _filter(df, "Mode", modes) if "Mode" in df.columns else df
+
+
+@operation("modal_periods")
+def modal_periods(ctx: Context, cases=None, modes=None) -> pd.DataFrame:
+    """Modal periods, frequencies, circular frequencies and eigenvalues."""
+    return _modal(ctx, "Modal Periods And Frequencies", cases, modes)
+
+
+@operation("modal_mass_participation")
+def modal_mass_participation(ctx: Context, cases=None, modes=None) -> pd.DataFrame:
+    """Per-mode and cumulative translational/rotational participating mass ratios."""
+    return _modal(ctx, "Modal Participating Mass Ratios", cases, modes)
+
+
+@operation("modal_load_participation")
+def modal_load_participation(ctx: Context, cases=None) -> pd.DataFrame:
+    """Static and dynamic modal load participation percentages."""
+    return _filter(ctx.table("Modal Load Participation Ratios"), "Case", cases)
+
+
+@operation("modal_participation_factors")
+def modal_participation_factors(ctx: Context, cases=None, modes=None) -> pd.DataFrame:
+    """Modal participation factors, modal mass and modal stiffness."""
+    return _modal(ctx, "Modal Participation Factors", cases, modes)
+
+
+@operation("modal_direction_factors")
+def modal_direction_factors(ctx: Context, cases=None, modes=None) -> pd.DataFrame:
+    """Direction factors UX, UY, UZ and RZ for each mode."""
+    return _modal(ctx, "Modal Direction Factors", cases, modes)
+
+
+@operation("story_forces")
+def story_forces(ctx: Context, stories=None, cases=None, combos=None) -> pd.DataFrame:
+    """Story forces P, VX, VY, T, MX and MY at top/bottom locations."""
+    return _filter(ctx.table("Story Forces", cases, combos), "Story", stories)
+
+
+@operation("story_stiffness")
+def story_stiffness(ctx: Context, stories=None, cases=None, combos=None) -> pd.DataFrame:
+    """Story shear, drift, lateral stiffness, irregularity and modifier."""
+    return _filter(ctx.table("Story Stiffness", cases, combos), "Story", stories)
+
+
+@operation("centers_of_mass_and_rigidity")
+def centers_of_mass_and_rigidity(ctx: Context, stories=None) -> pd.DataFrame:
+    """Story/diaphragm mass, center of mass and center of rigidity coordinates."""
+    return _filter(ctx.table("Centers Of Mass And Rigidity"), "Story", stories)
+
+
+@operation("tributary_area_llrf")
+def tributary_area_llrf(ctx: Context, stories=None, names=None) -> pd.DataFrame:
+    """Tributary area and live-load reduction factor for frame objects."""
+    df = _filter(ctx.table("Tributary Area and LLRF"), "Story", stories)
+    return _filter(df, "UniqueName", names)
 
 
 def zone_names(zones) -> List[str]:

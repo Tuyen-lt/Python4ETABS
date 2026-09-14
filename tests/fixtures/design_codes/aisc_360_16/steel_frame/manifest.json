@@ -1,0 +1,659 @@
+{
+  "fixture_version": 2,
+  "design_family": "steel_frame",
+  "design_code": "AISC 360-16",
+  "table_count": 5,
+  "row_count": 7,
+  "tables": {
+    "Steel Beam Envelope - AISC 360-16": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "Moment Interaction Check",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V22 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V33 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SectClass",
+          "display_name": "Section Class",
+          "unit": ""
+        },
+        {
+          "field_key": "VIEnd",
+          "display_name": "Conn. V I-End",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VJEnd",
+          "display_name": "Conn. V J-End",
+          "unit": "kN"
+        }
+      ]
+    },
+    "Steel Column Envelope - AISC 360-16": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "Moment Interaction Check",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V22 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V33 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SectClass",
+          "display_name": "Section Class",
+          "unit": ""
+        }
+      ]
+    },
+    "Steel Frame Design Overwrites - AISC 360-16": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "Unique Name",
+          "unit": ""
+        },
+        {
+          "field_key": "Type",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "Omega0",
+          "display_name": "Omega0",
+          "unit": ""
+        },
+        {
+          "field_key": "ConnectionType",
+          "display_name": "Connection Type",
+          "unit": ""
+        },
+        {
+          "field_key": "RelHingeDistL",
+          "display_name": "Relative Hinge Distance Sh/L Left",
+          "unit": ""
+        },
+        {
+          "field_key": "RelHingeDistR",
+          "display_name": "Yield Line Yc/h Parameter",
+          "unit": ""
+        },
+        {
+          "field_key": "RelYcYLMParam",
+          "display_name": "Relative Hinge Distance Sh/L Right",
+          "unit": ""
+        },
+        {
+          "field_key": "BRBBetaFact",
+          "display_name": "BRB Beta Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "BRBBOFact",
+          "display_name": "BRB Beta*Omega Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "RBSCapDes",
+          "display_name": "Perform RBS Capacity Design",
+          "unit": ""
+        },
+        {
+          "field_key": "CheckDefl",
+          "display_name": "Check Deflection?",
+          "unit": ""
+        },
+        {
+          "field_key": "DeflType",
+          "display_name": "Deflection Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DLRat",
+          "display_name": "DL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SDLandLLRat",
+          "display_name": "SDL+LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRat",
+          "display_name": "LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalRat",
+          "display_name": "Total Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "CamberRat",
+          "display_name": "Camber Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SpecCamber",
+          "display_name": "Specified Camber",
+          "unit": "m"
+        },
+        {
+          "field_key": "AreaRatio",
+          "display_name": "Net Area Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "LMajor",
+          "display_name": "Unbraced Length Ratio Major",
+          "unit": ""
+        },
+        {
+          "field_key": "LMinor",
+          "display_name": "Unbraced Length Ratio Minor",
+          "unit": ""
+        },
+        {
+          "field_key": "LTB",
+          "display_name": "Unbraced Length Ratio (LTB)",
+          "unit": ""
+        },
+        {
+          "field_key": "K1Major",
+          "display_name": "Effective Length Factor 1 Major",
+          "unit": ""
+        },
+        {
+          "field_key": "K1Minor",
+          "display_name": "Effective Length Factor 1 Minor",
+          "unit": ""
+        },
+        {
+          "field_key": "K2Major",
+          "display_name": "Effective Length Factor 2 Major",
+          "unit": ""
+        },
+        {
+          "field_key": "K2Minor",
+          "display_name": "Effective Length Factor 2 Minor",
+          "unit": ""
+        },
+        {
+          "field_key": "KLTB",
+          "display_name": "Effective Length Factor (KLTB)",
+          "unit": ""
+        },
+        {
+          "field_key": "CmMajor",
+          "display_name": "Moment Coefficient (Cm Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "CmMinor",
+          "display_name": "Moment Coefficient (Cm Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "Cb",
+          "display_name": "Bending Coefficient (Cb)",
+          "unit": ""
+        },
+        {
+          "field_key": "B1Major",
+          "display_name": "Nonsway Moment Factor (B1 Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "B1Minor",
+          "display_name": "Nonsway Moment Factor (B1 Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "B2Major",
+          "display_name": "Sway Moment Factor (B2 Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "B2Minor",
+          "display_name": "Sway Moment Factor (B2 Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "RHSSThk",
+          "display_name": "Reduce HSS Thickness?",
+          "unit": ""
+        },
+        {
+          "field_key": "HSSWeld",
+          "display_name": "HSS Welding Type?",
+          "unit": ""
+        },
+        {
+          "field_key": "Fy",
+          "display_name": "Yield stress, Fy",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "Ry",
+          "display_name": "Expected to specified Fy ratio, Ry",
+          "unit": ""
+        },
+        {
+          "field_key": "Pnc",
+          "display_name": "Compressive Capacity, Pnc",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Pnt",
+          "display_name": "Tensile Capacity, Pnt",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Mn3",
+          "display_name": "Major Bending Capacity, Mn3",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Mn2",
+          "display_name": "Minor Bending Capacity, Mn2",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Vn2",
+          "display_name": "Major Shear Capacity, Vn2",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Vn3",
+          "display_name": "Minor Shear Capacity, Vn3",
+          "unit": "kN"
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "D/C Ratio Limit",
+          "unit": ""
+        }
+      ]
+    },
+    "Steel Frame Design Preferences - AISC 360-16": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "SDC",
+          "display_name": "Seismic Design Category",
+          "unit": ""
+        },
+        {
+          "field_key": "ImpFactor",
+          "display_name": "Importance Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "Rho",
+          "display_name": "Design System Rho",
+          "unit": ""
+        },
+        {
+          "field_key": "Sds",
+          "display_name": "Design System Sds",
+          "unit": ""
+        },
+        {
+          "field_key": "R",
+          "display_name": "Design System R",
+          "unit": ""
+        },
+        {
+          "field_key": "Omega0",
+          "display_name": "Design System Omega0",
+          "unit": ""
+        },
+        {
+          "field_key": "Cd",
+          "display_name": "Design System Cd",
+          "unit": ""
+        },
+        {
+          "field_key": "DesProv",
+          "display_name": "Design Provision",
+          "unit": ""
+        },
+        {
+          "field_key": "AnalMethod",
+          "display_name": "Analysis Method",
+          "unit": ""
+        },
+        {
+          "field_key": "SOM",
+          "display_name": "Second Order Method",
+          "unit": ""
+        },
+        {
+          "field_key": "SRedMethod",
+          "display_name": "Stiffness Reduction Method",
+          "unit": ""
+        },
+        {
+          "field_key": "AddNotional",
+          "display_name": "Add Notional Load Case",
+          "unit": ""
+        },
+        {
+          "field_key": "Beta",
+          "display_name": "Beta Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "BetaOmega",
+          "display_name": "Beta Omega Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiBend",
+          "display_name": "Phi (Bending)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiComp",
+          "display_name": "Phi (Compression)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiTY",
+          "display_name": "Phi (Tension-Yielding)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiTF",
+          "display_name": "Phi (Tension-Fracture)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiShear",
+          "display_name": "Phi (Shear)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiShSWRI",
+          "display_name": "Phi (Shear-Short Webbed Rolled I)",
+          "unit": ""
+        },
+        {
+          "field_key": "PhiTors",
+          "display_name": "Phi (Torsion)",
+          "unit": ""
+        },
+        {
+          "field_key": "SeismicCode",
+          "display_name": "Ignore Seismic Code?",
+          "unit": ""
+        },
+        {
+          "field_key": "SpSeisLoad",
+          "display_name": "Ignore Special Seismic Load?",
+          "unit": ""
+        },
+        {
+          "field_key": "PlugWelded",
+          "display_name": "Doubler Plate Plug-Welded?",
+          "unit": ""
+        },
+        {
+          "field_key": "WeldingType",
+          "display_name": "HSS Welding Type",
+          "unit": ""
+        },
+        {
+          "field_key": "RHSSSThick",
+          "display_name": "Reduced HSS Thickness",
+          "unit": ""
+        },
+        {
+          "field_key": "CheckDefl",
+          "display_name": "Consider Deflection?",
+          "unit": ""
+        },
+        {
+          "field_key": "DLRat",
+          "display_name": "DL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SDLAndLLRat",
+          "display_name": "SDL+LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRat",
+          "display_name": "LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalRat",
+          "display_name": "Total Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalCamber",
+          "display_name": "Total Camber Limit",
+          "unit": ""
+        },
+        {
+          "field_key": "PatLLF",
+          "display_name": "Pattern Live Load Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "D/C Ratio Limit",
+          "unit": ""
+        },
+        {
+          "field_key": "MaxIter",
+          "display_name": "Maximum Iterations",
+          "unit": ""
+        }
+      ]
+    },
+    "Steel Frame Design Summary - AISC 360-16": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignType",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "PMM Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "PRatio",
+          "display_name": "P Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "MMajRatio",
+          "display_name": "M Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "MMinRatio",
+          "display_name": "M Minor Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajCombo",
+          "display_name": "V Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinCombo",
+          "display_name": "V Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V Minor Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "Message",
+          "display_name": "Message",
+          "unit": ""
+        }
+      ]
+    }
+  },
+  "status_message_values": {
+    "Steel Frame Design Summary - AISC 360-16::Status": {
+      "No Message": 1,
+      "Warning: See Message": 1
+    },
+    "Steel Frame Design Summary - AISC 360-16::Message": {
+      "kl/r > 200": 1
+    }
+  },
+  "read_errors": {}
+}

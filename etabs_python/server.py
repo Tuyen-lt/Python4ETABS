@@ -163,6 +163,21 @@ def list_ops():
     return jsonable_encoder(Engine(TableSource()).ops())
 
 
+@app.get("/sources/live/status")
+def live_status():
+    """Check if an active ETABS process can be contacted and check model lock status."""
+    try:
+        def _check():
+            from .connection import get_active_etabs
+            sap = get_active_etabs()
+            locked = bool(sap.GetModelIsLocked())
+            filename = sap.GetModelFilename()
+            return {"connected": True, "locked": locked, "model_path": filename}
+        return worker.call(_check)
+    except Exception as e:
+        return {"connected": False, "error": str(e)}
+
+
 @app.post("/sources/live")
 def add_live_source(req: LiveRequest = LiveRequest()):
     """Attach to a running ETABS (optionally by process id)."""
@@ -281,6 +296,15 @@ def job_result(job_id: str, format: str = "json"):
                         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                         headers={"Content-Disposition": f'attachment; filename="{job.op}.xlsx"'})
     return _error(400, f"Unsupported format '{format}' (json, csv, xlsx)")
+
+
+try:
+    from fastapi.staticfiles import StaticFiles
+    html_app_dir = Path(__file__).resolve().parents[3] / "HTML APP"
+    if html_app_dir.is_dir():
+        app.mount("/apps", StaticFiles(directory=str(html_app_dir), html=True), name="apps")
+except Exception:
+    pass
 
 
 def main():

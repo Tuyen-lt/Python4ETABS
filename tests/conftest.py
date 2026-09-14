@@ -98,6 +98,65 @@ TABLES = {
     "Joint Reactions": (
         ["Story", "Label", "Unique Name", "Output Case", "Case Type", "FX", "FY", "FZ", "MX", "MY", "MZ"],
         [None] * 5 + FORCE_U, [["Base", 1, 1, "ULS1", "Combination", 0, 0, 700, 0, 0, 0]]),
+    "Base Reactions": (
+        ["Output Case", "Case Type", "Step Type", "FX", "FY", "FZ", "MX", "MY", "MZ", "X", "Y", "Z"],
+        [None] * 3 + ["kN", "kN", "kN", "kN-m", "kN-m", "kN-m", "m", "m", "m"],
+        [["ULS1", "Combination", "", 0, 0, 700, 0, 0, 0, 0, 0, 0]]),
+    "Story Drifts": (
+        ["Story", "Output Case", "Case Type", "Direction", "Drift", "Label", "X", "Y", "Z"],
+        [None] * 6 + ["m", "m", "m"],
+        [["FL1", "SLS1", "Combination", "X", 0.002, "1", 0, 0, 4]]),
+    "Story Max Over Avg Drifts": (
+        ["Story", "Output Case", "Case Type", "Direction", "Max Drift", "Avg Drift", "Ratio"],
+        [None] * 4 + ["mm", "mm", None],
+        [["FL1", "SLS1", "Combination", "X", 8, 5, 1.6]]),
+    "Diaphragm Max Over Avg Drifts": (
+        ["Story", "Output Case", "Case Type", "Item", "Max Drift", "Avg Drift", "Ratio", "Label"],
+        [None] * 8, [["FL1", "SLS1", "Combination", "D1 X", 0.002, 0.0015, 1.333, "1"]]),
+    "Modal Periods And Frequencies": (
+        ["Case", "Mode", "Period", "Frequency", "CircFreq", "Eigenvalue"],
+        [None, None, "sec", "cyc/sec", "rad/sec", "rad2/sec2"],
+        [["MODAL", 1, 1.2, 0.8333, 5.236, 27.416], ["MODAL", 2, 0.9, 1.1111, 6.981, 48.739]]),
+    "Modal Participating Mass Ratios": (
+        ["Case", "Mode", "Period", "UX", "UY", "UZ", "SumUX", "SumUY", "SumUZ", "RX", "RY", "RZ", "SumRX", "SumRY", "SumRZ"],
+        [None, None, "sec"] + [None] * 12,
+        [["MODAL", 1, 1.2, .70, .05, 0, .70, .05, 0, 0, 0, .10, 0, 0, .10],
+         ["MODAL", 2, .9, .10, .75, 0, .80, .80, 0, 0, 0, .20, 0, 0, .30]]),
+    "Modal Load Participation Ratios": (
+        ["Case", "Item Type", "Item", "Static", "Dynamic"], [None, None, None, "%", "%"],
+        [["MODAL", "Acceleration", "UX", 100, 80]]),
+    "Modal Participation Factors": (
+        ["Case", "Mode", "Period", "UX", "UY", "UZ", "RX", "RY", "RZ", "ModalMass", "ModalStiff"],
+        [None, None, "sec"] + ["kN-m"] * 8,
+        [["MODAL", 1, 1.2, 1, 0, 0, 0, 0, .1, 100, 200]]),
+    "Modal Direction Factors": (
+        ["Case", "Mode", "Period", "UX", "UY", "UZ", "RZ"], [None, None, "sec"] + [None] * 4,
+        [["MODAL", 1, 1.2, 1, 0, 0, .1]]),
+    "Story Forces": (
+        ["Story", "Output Case", "Case Type", "Location", "P", "VX", "VY", "T", "MX", "MY"],
+        [None] * 4 + ["kN", "kN", "kN", "kN-m", "kN-m", "kN-m"],
+        [["FL1", "ULS1", "Combination", "Bottom", -700, 100, 50, 10, 200, 300]]),
+    "Story Stiffness": (
+        ["Story", "Output Case", "Case Type", "Shear X", "Drift X", "Stiff X", "Shear Y", "Drift Y", "Stiff Y", "Irregular", "Modifier"],
+        [None] * 3 + ["kN", "m", "kN/m", "kN", "m", "kN/m", None, None],
+        [["FL1", "SLS1", "Combination", 100, .008, 12500, 80, .005, 16000, "No", 1]]),
+    "Centers Of Mass And Rigidity": (
+        ["Story", "Diaphragm", "Mass X", "Mass Y", "XCM", "YCM", "XCR", "YCR"],
+        [None, None, "kN-s2/m", "kN-s2/m", "m", "m", "m", "m"],
+        [["FL1", "D1", 100, 100, 4, 3, 4.2, 2.9]]),
+    "Tributary Area and LLRF": (
+        ["Story", "Label", "Unique Name", "Type", "Tributary Area", "LLRF"],
+        [None] * 4 + ["m2", None], [["FL1", "B1", 10, "Beam", 24, .75]]),
+    "Concrete Column Design Summary - Eurocode 2-2004": (
+        ["Story", "Label", "UniqueName", "DesignSect", "Status", "PMMRatio", "WarnMsg", "ErrMsg"],
+        [None] * 8,
+        [["FL1", "C1", 12, "C50x50", "See Errors", 1.05, "No Message",
+          "Reinforcing required exceeds maximum allowed"]]),
+    "Concrete Column PMM Shear Envelope - SP 63 13330-2012": (
+        ["Story", "Label", "UniqueName", "DesignSect", "Location", "P", "MMajor", "MMinor",
+         "PMMCombo", "RatioRebar"],
+        [None] * 5 + ["kN", "kN-m", "kN-m", None, None],
+        [["FL1", "C1", 12, "C50x50", "Bottom", -1000, 100, 25, "ULS1", "1.20%"]]),
 }
 
 

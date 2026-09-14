@@ -1,0 +1,725 @@
+{
+  "fixture_version": 2,
+  "design_family": "shear_wall",
+  "design_code": "Eurocode 2-2004",
+  "source": "ETABS live example model, PID omitted",
+  "excluded": [
+    "license, serial and identifying Program Control fields"
+  ],
+  "tables": {
+    "Shear Wall Design Load Combination Data": {
+      "fields": [
+        {
+          "field_key": "ComboType",
+          "display_name": "Combo Type",
+          "unit": ""
+        },
+        {
+          "field_key": "ComboName",
+          "display_name": "Combo Name",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Strength",
+          "DWalS1"
+        ],
+        [
+          "Strength",
+          "DWalS2"
+        ]
+      ]
+    },
+    "Shear Wall Design Preferences - Eurocode 2-2004": {
+      "fields": [
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "RebarMat",
+          "display_name": "Rebar Material",
+          "unit": ""
+        },
+        {
+          "field_key": "RebarShrMat",
+          "display_name": "Rebar Shear Material",
+          "unit": ""
+        },
+        {
+          "field_key": "Country",
+          "display_name": "Country",
+          "unit": ""
+        },
+        {
+          "field_key": "CombEqn",
+          "display_name": "Combination Equation",
+          "unit": ""
+        },
+        {
+          "field_key": "RelClass",
+          "display_name": "Reliability Class",
+          "unit": ""
+        },
+        {
+          "field_key": "SOM",
+          "display_name": "Second Order Method",
+          "unit": ""
+        },
+        {
+          "field_key": "MinEcc",
+          "display_name": "Consider Minimum Eccentricity?",
+          "unit": ""
+        },
+        {
+          "field_key": "Theta0",
+          "display_name": "Theta0 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "ForceFact",
+          "display_name": "Force Modification Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "DuctFact",
+          "display_name": "Ductility Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaS",
+          "display_name": "Gamma (Steel)",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaC",
+          "display_name": "Gamma (Concrete)",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaM",
+          "display_name": "Gamma (Shear)",
+          "unit": ""
+        },
+        {
+          "field_key": "AlphaCC",
+          "display_name": "AlphaCC",
+          "unit": ""
+        },
+        {
+          "field_key": "AlphaLCC",
+          "display_name": "AlphaLCC",
+          "unit": ""
+        },
+        {
+          "field_key": "NumCurves",
+          "display_name": "# Interaction Curves",
+          "unit": ""
+        },
+        {
+          "field_key": "NumPoints",
+          "display_name": "# Interaction Points",
+          "unit": ""
+        },
+        {
+          "field_key": "PTMax",
+          "display_name": "Edge Design PT-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "PCMax",
+          "display_name": "Edge Design PC-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "IPMax",
+          "display_name": "Section Design IP-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "IPMin",
+          "display_name": "Section Design IP-Min",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "Utlization Factor Limit",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Step-by-Step - All",
+          "A615Gr60",
+          "A615Gr60",
+          "CEN Default",
+          "Eq. 6.10",
+          "Class 2",
+          "Nominal Stiffness",
+          "Yes",
+          0.005,
+          2,
+          2,
+          1.15,
+          1.5,
+          1.25,
+          1,
+          0.85,
+          24,
+          11,
+          0.06,
+          0.04,
+          0.04,
+          0.0025,
+          0.95
+        ]
+      ]
+    },
+    "Shear Wall Pier Design Overwrites - Eurocode 2-2004": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Pier",
+          "display_name": "Pier",
+          "unit": ""
+        },
+        {
+          "field_key": "DoDesign",
+          "display_name": "Design?",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "Seismic",
+          "display_name": "Seismic?",
+          "unit": ""
+        },
+        {
+          "field_key": "PierSecType",
+          "display_name": "Pier Section Type",
+          "unit": ""
+        },
+        {
+          "field_key": "EndBar",
+          "display_name": "End/Corner Bar Size",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBar",
+          "display_name": "Edge Bar Size",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBarSpc",
+          "display_name": "Edge Bar Spacing",
+          "unit": "m"
+        },
+        {
+          "field_key": "ClearCover",
+          "display_name": "Clear Cover",
+          "unit": "m"
+        },
+        {
+          "field_key": "Material",
+          "display_name": "Concrete Material",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignCheck",
+          "display_name": "Design/Check",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story4",
+          "P1",
+          "Program Determined",
+          0,
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          0.0,
+          0.0,
+          "Program Determined",
+          "Design"
+        ]
+      ]
+    },
+    "Shear Wall Pier Design Summary - Eurocode 2-2004": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Pier",
+          "display_name": "Pier Label",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignType",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBar",
+          "display_name": "Edge Rebar",
+          "unit": ""
+        },
+        {
+          "field_key": "EndBar",
+          "display_name": "End Rebar",
+          "unit": ""
+        },
+        {
+          "field_key": "BarSpacing",
+          "display_name": "Rebar Spacing",
+          "unit": "m"
+        },
+        {
+          "field_key": "ReinfPcent",
+          "display_name": "Required Reinf. Percentage",
+          "unit": "%"
+        },
+        {
+          "field_key": "CurrPcent",
+          "display_name": "Current Reinf. Percentage",
+          "unit": "%"
+        },
+        {
+          "field_key": "PierLeg",
+          "display_name": "Pier Leg",
+          "unit": ""
+        },
+        {
+          "field_key": "LegX1",
+          "display_name": "Leg X1",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegY1",
+          "display_name": "Leg Y1",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegX2",
+          "display_name": "Leg X2",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegY2",
+          "display_name": "Leg Y2",
+          "unit": "m"
+        },
+        {
+          "field_key": "Length",
+          "display_name": "Length",
+          "unit": "m"
+        },
+        {
+          "field_key": "Thickness",
+          "display_name": "Thickness",
+          "unit": "m"
+        },
+        {
+          "field_key": "ShearAv",
+          "display_name": "Shear Rebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "NCompStr",
+          "display_name": "Normalized Compressive Stress",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "NCompStrLim",
+          "display_name": "Normalized Compressive Limit",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "CDepth",
+          "display_name": "C Depth",
+          "unit": "m"
+        },
+        {
+          "field_key": "BZoneL",
+          "display_name": "Boundary Zone Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "BZoneR",
+          "display_name": "Boundary Zone Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "Warnings",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "Errors",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story4",
+          "P1",
+          "Top",
+          "Uniform",
+          10,
+          10,
+          0.25,
+          0.89,
+          0.26,
+          "Top Leg 1",
+          8.0,
+          0.0,
+          16.0,
+          0.0,
+          8.0,
+          0.25,
+          0.00055,
+          0.0,
+          0.0,
+          null,
+          null,
+          null,
+          "No Message",
+          "No Message"
+        ],
+        [
+          "Story4",
+          "P1",
+          "Bottom",
+          "Uniform",
+          10,
+          10,
+          0.25,
+          0.73,
+          0.26,
+          "Bottom Leg 1",
+          8.0,
+          0.0,
+          16.0,
+          0.0,
+          8.0,
+          0.25,
+          0.00046,
+          0.0,
+          0.0,
+          null,
+          null,
+          null,
+          "No Message",
+          "No Message"
+        ]
+      ]
+    },
+    "Shear Wall Spandrel Design Overwrites - Eurocode 2-2004": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Spandrel",
+          "display_name": "Spandrel",
+          "unit": ""
+        },
+        {
+          "field_key": "DoDesign",
+          "display_name": "Design?",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "Seismic",
+          "display_name": "Seismic?",
+          "unit": ""
+        },
+        {
+          "field_key": "SeisDesignGrade",
+          "display_name": "Seismic Design Grade",
+          "unit": ""
+        },
+        {
+          "field_key": "Length",
+          "display_name": "Length Bottom",
+          "unit": "m"
+        },
+        {
+          "field_key": "ThkLeft",
+          "display_name": "Thickness Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "DepthLeft",
+          "display_name": "Depth Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovBotLeft",
+          "display_name": "Cover Bottom Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovTopLeft",
+          "display_name": "Cover Top Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabWidthLeft",
+          "display_name": "Slab Width Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabDepthLeft",
+          "display_name": "Slab Depth Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "ThkRight",
+          "display_name": "Thickness Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "DepthRight",
+          "display_name": "Depth Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovBotRight",
+          "display_name": "Cover Bottom Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovTopRight",
+          "display_name": "Cover Top Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabWidthRight",
+          "display_name": "Slab Width Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabDepthRight",
+          "display_name": "Slab Depth Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "Material",
+          "display_name": "Concrete Material",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story4",
+          "S1",
+          "Program Determined",
+          0,
+          "Program Determined",
+          "Program Determined",
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          "Program Determined"
+        ]
+      ]
+    },
+    "Shear Wall Spandrel Design Summary - Eurocode 2-2004": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Spandrel",
+          "display_name": "Spandrel",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": ""
+        },
+        {
+          "field_key": "TopRebar",
+          "display_name": "Top Rebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "TopRebarRat",
+          "display_name": "Top Rebar Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TopRebarCmb",
+          "display_name": "Top Rebar Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "MuTop",
+          "display_name": "Top Design Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "BotRebar",
+          "display_name": "Bottom Rebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "BotRebarRat",
+          "display_name": "Bottom Rebar Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "BotRebarCmb",
+          "display_name": "Bottom Rebar Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "MuBot",
+          "display_name": "Bottom Design Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "AVert",
+          "display_name": "Av Vert",
+          "unit": "m"
+        },
+        {
+          "field_key": "AHorz",
+          "display_name": "Av Horz",
+          "unit": "m"
+        },
+        {
+          "field_key": "ShearCombo",
+          "display_name": "Shear Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "Vu",
+          "display_name": "Design Shear",
+          "unit": "kN"
+        },
+        {
+          "field_key": "ADiag",
+          "display_name": "Av Diag",
+          "unit": "m²"
+        },
+        {
+          "field_key": "Mandatory",
+          "display_name": "Mandatory",
+          "unit": ""
+        },
+        {
+          "field_key": "ShrDiagCmb",
+          "display_name": "Diag Shear Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VuDiag",
+          "display_name": "Design Shear Diag.",
+          "unit": "kN"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "Warnings",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "Errors",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story4",
+          "S1",
+          "Left",
+          0.0012569999999999999,
+          0.005026,
+          "DWalS2",
+          -351.246326,
+          0.000745,
+          0.002979,
+          "DWalS2",
+          0.0,
+          0.00044,
+          0.0,
+          "DWalS2",
+          317.5005,
+          null,
+          null,
+          "DWalS2",
+          317.5005,
+          "No Message",
+          "No Message"
+        ],
+        [
+          "Story4",
+          "S1",
+          "Right",
+          0.00227,
+          0.009081,
+          "DWalS2",
+          -639.352313,
+          0.000745,
+          0.002979,
+          "DWalS2",
+          0.0,
+          0.0005300000000000001,
+          0.0,
+          "DWalS2",
+          388.17778000000004,
+          null,
+          null,
+          "DWalS2",
+          388.17778000000004,
+          "No Message",
+          "No Message"
+        ]
+      ]
+    }
+  },
+  "read_errors": {}
+}

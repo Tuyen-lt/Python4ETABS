@@ -1,0 +1,539 @@
+{
+  "fixture_version": 2,
+  "design_family": "shear_wall",
+  "design_code": "SP 63.13330-2012",
+  "table_count": 6,
+  "row_count": 9,
+  "tables": {
+    "Shear Wall Design Load Combination Data": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "ComboType",
+          "display_name": "Combo Type",
+          "unit": ""
+        },
+        {
+          "field_key": "ComboName",
+          "display_name": "Combo Name",
+          "unit": ""
+        }
+      ]
+    },
+    "Shear Wall Design Preferences - SP 63-13330-2012": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "RebarMat",
+          "display_name": "Rebar Material",
+          "unit": ""
+        },
+        {
+          "field_key": "RebarShrMat",
+          "display_name": "Rebar Shear Material",
+          "unit": ""
+        },
+        {
+          "field_key": "RelHumid",
+          "display_name": "Relative Humidity (%)",
+          "unit": ""
+        },
+        {
+          "field_key": "MoistCon",
+          "display_name": "Moistire Content (Fraction)",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB",
+          "display_name": "Gamma_b",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaBt",
+          "display_name": "Gamma_bt",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB1ST",
+          "display_name": "Gamma_b1 Short Term",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB1LT",
+          "display_name": "Gamma_b1 Long Term",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB2",
+          "display_name": "Gamma_b2",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB3Bm",
+          "display_name": "Gamma_b3 Beams",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB3Col",
+          "display_name": "Gamma_b3 Columns",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB4",
+          "display_name": "Gamma_b4",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaB5",
+          "display_name": "Gamma_b5",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaS",
+          "display_name": "Gamma_S",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaS1",
+          "display_name": "Gamma_S1",
+          "unit": ""
+        },
+        {
+          "field_key": "LLDF",
+          "display_name": "Live Load Duration Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "SLDF",
+          "display_name": "Snow Load Duration Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "PMax",
+          "display_name": "PMax Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "NumCurves",
+          "display_name": "# Interaction Curves",
+          "unit": ""
+        },
+        {
+          "field_key": "NumPoints",
+          "display_name": "# Interaction Points",
+          "unit": ""
+        },
+        {
+          "field_key": "PTMax",
+          "display_name": "Edge Design PT-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "PCMax",
+          "display_name": "Edge Design PC-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "IPMax",
+          "display_name": "Section Design IP-Max",
+          "unit": ""
+        },
+        {
+          "field_key": "IPMin",
+          "display_name": "Section Design IP-Min",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "Utlization Factor Limit",
+          "unit": ""
+        }
+      ]
+    },
+    "Shear Wall Pier Design Overwrites - SP 63-13330-2012": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Pier",
+          "display_name": "Pier",
+          "unit": ""
+        },
+        {
+          "field_key": "DoDesign",
+          "display_name": "Design?",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "PierSecType",
+          "display_name": "Pier Section Type",
+          "unit": ""
+        },
+        {
+          "field_key": "EndBar",
+          "display_name": "End/Corner Bar Size",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBar",
+          "display_name": "Edge Bar Size",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBarSpc",
+          "display_name": "Edge Bar Spacing",
+          "unit": "m"
+        },
+        {
+          "field_key": "ClearCover",
+          "display_name": "Clear Cover",
+          "unit": "m"
+        },
+        {
+          "field_key": "Material",
+          "display_name": "Concrete Material",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignCheck",
+          "display_name": "Design/Check",
+          "unit": ""
+        }
+      ]
+    },
+    "Shear Wall Pier Design Summary - SP 63 13330 2012": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Pier",
+          "display_name": "Pier Label",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignType",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "EdgeBar",
+          "display_name": "Edge Rebar",
+          "unit": ""
+        },
+        {
+          "field_key": "EndBar",
+          "display_name": "End Rebar",
+          "unit": ""
+        },
+        {
+          "field_key": "BarSpacing",
+          "display_name": "Rebar Spacing",
+          "unit": "m"
+        },
+        {
+          "field_key": "ReinfPcent",
+          "display_name": "Required Reinf. Percentage",
+          "unit": "%"
+        },
+        {
+          "field_key": "CurrPcent",
+          "display_name": "Current Reinf. Percentage",
+          "unit": "%"
+        },
+        {
+          "field_key": "PierLeg",
+          "display_name": "Pier Leg",
+          "unit": ""
+        },
+        {
+          "field_key": "LegX1",
+          "display_name": "Leg X1",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegY1",
+          "display_name": "Leg Y1",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegX2",
+          "display_name": "Leg X2",
+          "unit": "m"
+        },
+        {
+          "field_key": "LegY2",
+          "display_name": "Leg Y2",
+          "unit": "m"
+        },
+        {
+          "field_key": "Length",
+          "display_name": "Length",
+          "unit": "m"
+        },
+        {
+          "field_key": "Thickness",
+          "display_name": "Thickness",
+          "unit": "m"
+        },
+        {
+          "field_key": "ShearAv",
+          "display_name": "Shear Rebar",
+          "unit": "m"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "Warnings",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "Errors",
+          "unit": ""
+        }
+      ]
+    },
+    "Shear Wall Spandrel Design Overwrites - SP 63-13330-2012": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Spandrel",
+          "display_name": "Spandrel",
+          "unit": ""
+        },
+        {
+          "field_key": "DoDesign",
+          "display_name": "Design?",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "Length",
+          "display_name": "Length Bottom",
+          "unit": "m"
+        },
+        {
+          "field_key": "ThkLeft",
+          "display_name": "Thickness Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "DepthLeft",
+          "display_name": "Depth Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovBotLeft",
+          "display_name": "Cover Bottom Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovTopLeft",
+          "display_name": "Cover Top Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabWidthLeft",
+          "display_name": "Slab Width Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabDepthLeft",
+          "display_name": "Slab Depth Left",
+          "unit": "m"
+        },
+        {
+          "field_key": "ThkRight",
+          "display_name": "Thickness Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "DepthRight",
+          "display_name": "Depth Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovBotRight",
+          "display_name": "Cover Bottom Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "CovTopRight",
+          "display_name": "Cover Top Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabWidthRight",
+          "display_name": "Slab Width Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "SlabDepthRight",
+          "display_name": "Slab Depth Right",
+          "unit": "m"
+        },
+        {
+          "field_key": "Material",
+          "display_name": "Concrete Material",
+          "unit": ""
+        }
+      ]
+    },
+    "Shear Wall Spandrel Design Summary - SP 63 13330 2012": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Spandrel",
+          "display_name": "Spandrel",
+          "unit": ""
+        },
+        {
+          "field_key": "Station",
+          "display_name": "Station",
+          "unit": ""
+        },
+        {
+          "field_key": "TopRebar",
+          "display_name": "Top Rebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "TopRebarRat",
+          "display_name": "Top Rebar Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TopRebarCmb",
+          "display_name": "Top Rebar Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "MuTop",
+          "display_name": "Top Design Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "BotRebar",
+          "display_name": "Bottom Rebar",
+          "unit": "m²"
+        },
+        {
+          "field_key": "BotRebarRat",
+          "display_name": "Bottom Rebar Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "BotRebarCmb",
+          "display_name": "Bottom Rebar Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "MuBot",
+          "display_name": "Bottom Design Moment",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "AVert",
+          "display_name": "Av Vert",
+          "unit": "m"
+        },
+        {
+          "field_key": "AHorz",
+          "display_name": "Av Horz",
+          "unit": "m"
+        },
+        {
+          "field_key": "ShearCombo",
+          "display_name": "Shear Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "Vu",
+          "display_name": "Design Shear",
+          "unit": "kN"
+        },
+        {
+          "field_key": "ADiag",
+          "display_name": "Av Diag",
+          "unit": "m²"
+        },
+        {
+          "field_key": "Mandatory",
+          "display_name": "Mandatory",
+          "unit": ""
+        },
+        {
+          "field_key": "ShrDiagCmb",
+          "display_name": "Diag Shear Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VuDiag",
+          "display_name": "Design Shear Diag.",
+          "unit": "kN"
+        },
+        {
+          "field_key": "WarnMsg",
+          "display_name": "Warnings",
+          "unit": ""
+        },
+        {
+          "field_key": "ErrMsg",
+          "display_name": "Errors",
+          "unit": ""
+        }
+      ]
+    }
+  },
+  "status_message_values": {
+    "Shear Wall Pier Design Summary - SP 63 13330 2012::WarnMsg": {
+      "No Message": 2
+    },
+    "Shear Wall Pier Design Summary - SP 63 13330 2012::ErrMsg": {
+      "No Message": 2
+    },
+    "Shear Wall Spandrel Design Summary - SP 63 13330 2012::WarnMsg": {
+      "No Message": 2
+    },
+    "Shear Wall Spandrel Design Summary - SP 63 13330 2012::ErrMsg": {
+      "No Message": 2
+    }
+  },
+  "read_errors": {}
+}

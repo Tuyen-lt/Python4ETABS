@@ -191,7 +191,20 @@ Assignment tables with several rows per object (loads) are skipped; read them wi
 | `column_forces` | `names, cases, combos` | yes | Element Forces - Columns |
 | `pier_forces` | `piers, stories, cases, combos` | no | Pier Forces: `Story, Pier, OutputCase, Location (Top/Bottom), P..M3` |
 | `joint_reactions` | `names, cases, combos` | yes | Joint Reactions: `UniqueName, OutputCase, FX, FY, FZ, MX, MY, MZ` |
+| `base_reactions` | `cases, combos` | no | Base Reactions: resultant `FX, FY, FZ, MX, MY, MZ, X, Y, Z` |
 | `beam_forces_by_zone` | `names, cases, combos, zones=(0.25, 0.5, 0.25), envelope=False` | yes | per beam x zone (x `OutputCase`, `StepType` unless `envelope`): `UniqueName, Story, Label, Length, AnalysisSect, Zone, ZoneStart, ZoneEnd, P_max, P_min, V2_max, ..., M3_min` |
+| `story_drifts` | `stories, cases, combos` | no | Point-based story drift ratios and governing coordinates |
+| `story_max_over_average_drifts` | `stories, cases, combos` | no | Story maximum drift, average drift and torsional ratio |
+| `diaphragm_max_over_average_drifts` | `stories, cases, combos` | no | Diaphragm maximum/average drift and governing point |
+| `story_forces` | `stories, cases, combos` | no | Story `P, VX, VY, T, MX, MY` at top/bottom |
+| `story_stiffness` | `stories, cases, combos` | no | Story shear, drift, stiffness and irregularity flags |
+| `modal_periods` | `cases, modes` | no | Period, frequency, circular frequency and eigenvalue |
+| `modal_mass_participation` | `cases, modes` | no | Per-mode and cumulative `UX..RZ` mass ratios |
+| `modal_load_participation` | `cases` | no | Static/dynamic load participation percentages |
+| `modal_participation_factors` | `cases, modes` | no | Participation factors, modal mass and stiffness |
+| `modal_direction_factors` | `cases, modes` | no | Modal direction factors `UX, UY, UZ, RZ` |
+| `centers_of_mass_and_rigidity` | `stories` | no | Story mass, centers of mass and rigidity |
+| `tributary_area_llrf` | `stories, names` | no | Tributary area and live-load reduction factor |
 
 `beam_forces_by_zone` rules: relative position = `Station / Length` (Station measured from the I-end of the
 object, so rigid end offsets are included in the length); zones are consecutive ratios that must sum to 1

@@ -162,19 +162,65 @@ class EtabsDataBridge:
         self.refresh_view()
         return results
 
-    def inject_group_definition(self, group_names: Union[str, List[str]]) -> Dict[str, Any]:
+    def inject_group_definition(self, group_names: Union[str, List[Any], Dict[str, Any]]) -> Dict[str, Any]:
         """
-        Define one or more groups.
+        Define one or more groups with optional color.
+        If a group already exists, deletes it (or detaches assignments) first to prevent stale assignments.
         """
         self._ensure_unlocked("Define groups")
+        items: List[Dict[str, Any]] = []
         if isinstance(group_names, str):
-            group_names = [group_names]
+            items = [{"name": group_names, "color": None}]
+        elif isinstance(group_names, dict):
+            items = [{"name": str(k).strip(), "color": v} for k, v in group_names.items() if str(k).strip()]
+        elif isinstance(group_names, list):
+            for g in group_names:
+                if isinstance(g, dict):
+                    name = str(g.get("name") or g.get("group_name", "")).strip()
+                    if name:
+                        items.append({"name": name, "color": g.get("color")})
+                elif isinstance(g, str) and g.strip():
+                    items.append({"name": g.strip(), "color": None})
+
+        try:
+            ret_names = self.sap_model.GroupDef.GetNameList()
+            existing_groups = set(ret_names[1] or []) if ret_names and len(ret_names) > 1 else set()
+        except Exception:
+            existing_groups = set()
 
         results = {"success": 0, "failed": 0, "errors": []}
-        for name in group_names:
-            ret = self.sap_model.GroupDef.SetGroup(name)
+        for item in items:
+            name = item["name"]
+            color = item.get("color")
+
+            if name in existing_groups:
+                ret_del = -1
+                try:
+                    ret_del = self.sap_model.GroupDef.Delete(name)
+                except Exception:
+                    pass
+                if ret_del != 0:
+                    for obj_api in [self.sap_model.AreaObj, self.sap_model.FrameObj, self.sap_model.PointObj]:
+                        try:
+                            obj_api.SetGroupAssign(name, name, True, 1)
+                        except Exception:
+                            pass
+
+            ret = -1
+            try:
+                if color is not None and str(color).strip() != "":
+                    ret = self.sap_model.GroupDef.SetGroup(name, int(color), True, True, True)
+                else:
+                    ret = self.sap_model.GroupDef.SetGroup(name)
+            except Exception:
+                try:
+                    ret = self.sap_model.GroupDef.SetGroup(name)
+                except Exception as e2:
+                    results["errors"].append(f"Group '{name}' creation exception: {e2}")
+
             if ret == 0:
                 results["success"] += 1
+                existing_groups.add(name)
             else:
                 results["failed"] += 1
                 results["errors"].append(f"Cannot create group '{name}' (ret={ret})")

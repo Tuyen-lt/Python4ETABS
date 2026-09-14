@@ -1,0 +1,578 @@
+{
+  "fixture_version": 2,
+  "design_family": "steel_frame",
+  "design_code": "BS 5950-2000",
+  "source": "ETABS live example model, PID omitted",
+  "excluded": [
+    "license, serial and identifying Program Control fields"
+  ],
+  "tables": {
+    "Steel Beam Envelope - BS 5950-2000": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "Moment Interaction Check",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V22 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V33 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SectClass",
+          "display_name": "Section Class",
+          "unit": ""
+        },
+        {
+          "field_key": "VIEnd",
+          "display_name": "Conn. V I-End",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VJEnd",
+          "display_name": "Conn. V J-End",
+          "unit": "kN"
+        }
+      ],
+      "values": [
+        [
+          "Story1",
+          "B4",
+          "140",
+          "SteelBm",
+          "0.891 = 0 + 0.891 + 0",
+          "DStlS2",
+          0.076,
+          0,
+          "Class 2",
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "Steel Column Envelope - BS 5950-2000": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "Moment Interaction Check",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V22 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V33 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SectClass",
+          "display_name": "Section Class",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story1",
+          "C2",
+          "50",
+          "SteelCol",
+          "0.292 = 0.212 + 0.074 + 0.006",
+          "DStlS2",
+          0.053,
+          0.001,
+          "Class 3"
+        ]
+      ]
+    },
+    "Steel Frame Design Overwrites - BS 5950-2000": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "Unique Name",
+          "unit": ""
+        },
+        {
+          "field_key": "Type",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "CheckDefl",
+          "display_name": "Check Deflection?",
+          "unit": ""
+        },
+        {
+          "field_key": "DeflType",
+          "display_name": "Deflection Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DLRat",
+          "display_name": "DL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SDLandLLRat",
+          "display_name": "SDL+LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRat",
+          "display_name": "LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalRat",
+          "display_name": "Total Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "CamberRat",
+          "display_name": "Camber Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SpecCamber",
+          "display_name": "Specified Camber",
+          "unit": "m"
+        },
+        {
+          "field_key": "AreaRatio",
+          "display_name": "Net Area Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "LMajor",
+          "display_name": "Unbraced Length Ratio Major",
+          "unit": ""
+        },
+        {
+          "field_key": "LMinor",
+          "display_name": "Unbraced Length Ratio Minor",
+          "unit": ""
+        },
+        {
+          "field_key": "KMajor",
+          "display_name": "Effective Length Factor Major",
+          "unit": ""
+        },
+        {
+          "field_key": "KMinor",
+          "display_name": "Effective Length Factor Minor",
+          "unit": ""
+        },
+        {
+          "field_key": "CmMajor",
+          "display_name": "Uniform Moment Factor (m Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "CmMinor",
+          "display_name": "Uniform Moment Factor (m Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "Cb",
+          "display_name": "Eqv. Uniform Moment factor (mLT)",
+          "unit": ""
+        },
+        {
+          "field_key": "Fy",
+          "display_name": "Yield stress, Fy",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "Pnc",
+          "display_name": "Compressive Capacity, Pc",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Pnt",
+          "display_name": "Tensile Capacity, Pt",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Mn3",
+          "display_name": "Major Bending Capacity, Mc3",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Mn2",
+          "display_name": "Minor Bending Capacity, Mc2",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Mb",
+          "display_name": "Buckling Resistance Moment, Mb",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Vn2",
+          "display_name": "Major Shear Capacity, Pv2",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Vn3",
+          "display_name": "Minor Shear Capacity, Pv3",
+          "unit": "kN"
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "D/C Ratio Limit",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story1",
+          "C2",
+          "50",
+          "Column",
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          0,
+          0,
+          0,
+          0,
+          0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0
+        ],
+        [
+          "Story1",
+          "B4",
+          "140",
+          "Beam",
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          "Program Determined",
+          0,
+          0,
+          0,
+          0,
+          0,
+          0.0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0
+        ]
+      ]
+    },
+    "Steel Frame Design Preferences - BS 5950-2000": {
+      "fields": [
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "CheckDefl",
+          "display_name": "Consider Deflection?",
+          "unit": ""
+        },
+        {
+          "field_key": "DLRat",
+          "display_name": "DL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SDLAndLLRat",
+          "display_name": "SDL+LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRat",
+          "display_name": "LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalRat",
+          "display_name": "Total Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalCamber",
+          "display_name": "Total Camber Limit",
+          "unit": ""
+        },
+        {
+          "field_key": "PatLLF",
+          "display_name": "Pattern Live Load Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "D/C Ratio Limit",
+          "unit": ""
+        },
+        {
+          "field_key": "MaxIter",
+          "display_name": "Maximum Iterations",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Step-by-Step - All",
+          "Moment Frame",
+          "Yes",
+          120,
+          120,
+          360,
+          240,
+          240,
+          0.75,
+          0.95,
+          1
+        ]
+      ]
+    },
+    "Steel Frame Design Summary - BS 5950-2000": {
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignType",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "PMM Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "PRatio",
+          "display_name": "P Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "MMajRatio",
+          "display_name": "M Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "MMinRatio",
+          "display_name": "M Minor Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajCombo",
+          "display_name": "V Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinCombo",
+          "display_name": "V Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V Minor Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "Message",
+          "display_name": "Message",
+          "unit": ""
+        }
+      ],
+      "values": [
+        [
+          "Story1",
+          "C2",
+          "50",
+          "Column",
+          "SteelCol",
+          "No Message",
+          "DStlS2(C)",
+          0.292,
+          0.212,
+          0.074,
+          0.006,
+          "DStlS2",
+          0.053,
+          "DStlS2",
+          0.001,
+          null
+        ],
+        [
+          "Story1",
+          "B4",
+          "140",
+          "Beam",
+          "SteelBm",
+          "Warning: See Message",
+          "DStlS2(C)",
+          0.891,
+          0.0,
+          0.891,
+          0.0,
+          "DStlS2",
+          0.076,
+          "DStlS2",
+          0.0,
+          "kl/r > 180"
+        ]
+      ]
+    }
+  },
+  "read_errors": {}
+}

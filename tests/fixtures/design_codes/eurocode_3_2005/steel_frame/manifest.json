@@ -1,0 +1,580 @@
+{
+  "fixture_version": 2,
+  "design_family": "steel_frame",
+  "design_code": "Eurocode 3-2005",
+  "table_count": 5,
+  "row_count": 7,
+  "tables": {
+    "Steel Beam Envelope - Eurocode 3-2005": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "Moment Interaction Check",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V22 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V33 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SectClass",
+          "display_name": "Section Class",
+          "unit": ""
+        },
+        {
+          "field_key": "VIEnd",
+          "display_name": "Conn. V I-End",
+          "unit": "kN"
+        },
+        {
+          "field_key": "VJEnd",
+          "display_name": "Conn. V J-End",
+          "unit": "kN"
+        }
+      ]
+    },
+    "Steel Column Envelope - Eurocode 3-2005": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Section",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "Moment Interaction Check",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V22 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V33 Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SectClass",
+          "display_name": "Section Class",
+          "unit": ""
+        }
+      ]
+    },
+    "Steel Frame Design Overwrites - Eurocode 3-2005": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "Unique Name",
+          "unit": ""
+        },
+        {
+          "field_key": "Type",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "SectClass",
+          "display_name": "Section Class",
+          "unit": ""
+        },
+        {
+          "field_key": "BCurveYY",
+          "display_name": "Column Buckling Curve (y-y)",
+          "unit": ""
+        },
+        {
+          "field_key": "BCurveZZ",
+          "display_name": "Column Buckling Curve (z-z)",
+          "unit": ""
+        },
+        {
+          "field_key": "BCurveLTB",
+          "display_name": "Column Buckling Curve (LTB)",
+          "unit": ""
+        },
+        {
+          "field_key": "Omega0",
+          "display_name": "System Overstrength Factor, Omega",
+          "unit": ""
+        },
+        {
+          "field_key": "Rolled",
+          "display_name": "Is Rolled Section?",
+          "unit": ""
+        },
+        {
+          "field_key": "CheckDefl",
+          "display_name": "Check Deflection?",
+          "unit": ""
+        },
+        {
+          "field_key": "DeflType",
+          "display_name": "Deflection Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DLRat",
+          "display_name": "DL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SDLandLLRat",
+          "display_name": "SDL+LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRat",
+          "display_name": "LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalRat",
+          "display_name": "Total Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "CamberRat",
+          "display_name": "Camber Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SpecCamber",
+          "display_name": "Specified Camber",
+          "unit": "m"
+        },
+        {
+          "field_key": "AreaRatio",
+          "display_name": "Net Area Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRF",
+          "display_name": "LLRF",
+          "unit": ""
+        },
+        {
+          "field_key": "LMajor",
+          "display_name": "Unbraced Length Ratio Major",
+          "unit": ""
+        },
+        {
+          "field_key": "LMinor",
+          "display_name": "Unbraced Length Ratio Minor",
+          "unit": ""
+        },
+        {
+          "field_key": "LTB",
+          "display_name": "Unbraced Length Ratio (LTB)",
+          "unit": ""
+        },
+        {
+          "field_key": "K1Major",
+          "display_name": "Effective Length Factor Braced (K1 Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "K1Minor",
+          "display_name": "Effective Length Factor Braced (K1 Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "K2Major",
+          "display_name": "Effective Length Factor Sway (K2 Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "K2Minor",
+          "display_name": "Effective Length Factor Sway (K2 Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "KLTB",
+          "display_name": "Effective Length Factor (KLTB)",
+          "unit": ""
+        },
+        {
+          "field_key": "Cb",
+          "display_name": "Bending Coefficient (C1)",
+          "unit": ""
+        },
+        {
+          "field_key": "kyy",
+          "display_name": "Moment Coefficient (kyy Major)",
+          "unit": ""
+        },
+        {
+          "field_key": "kzz",
+          "display_name": "Moment Coefficient (kzz Minor)",
+          "unit": ""
+        },
+        {
+          "field_key": "kzy",
+          "display_name": "Moment Coefficient (kzy)",
+          "unit": ""
+        },
+        {
+          "field_key": "kyz",
+          "display_name": "Moment Coefficient (kyz)",
+          "unit": ""
+        },
+        {
+          "field_key": "Fy",
+          "display_name": "Yield stress, Fy",
+          "unit": "MPa"
+        },
+        {
+          "field_key": "GammaOV",
+          "display_name": "Material Overstrength Factor, Gamma_OV",
+          "unit": ""
+        },
+        {
+          "field_key": "Iw",
+          "display_name": "Warping Constant, Iw",
+          "unit": "m⁶"
+        },
+        {
+          "field_key": "NcrT",
+          "display_name": "Elastic Torsional Buckling Force, Ncr,T",
+          "unit": "kN"
+        },
+        {
+          "field_key": "NcrTF",
+          "display_name": "Elastic Torsional-Flexural Buckling Force, Ncr,TFy",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Pnc",
+          "display_name": "Compressive Capacity, Nc.Rd",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Pnt",
+          "display_name": "Tensile Capacity, Nt.Rd",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Mn3",
+          "display_name": "Major Bending Capacity, Mc3.Rd",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Mn2",
+          "display_name": "Minor Bending Capacity, Mc2.Rd",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Mcr",
+          "display_name": "Buckling Resistance Moment, Mb.Rd",
+          "unit": "kN-m"
+        },
+        {
+          "field_key": "Vn2",
+          "display_name": "Major Average Shear Capacity, V2.Rd",
+          "unit": "kN"
+        },
+        {
+          "field_key": "Vn3",
+          "display_name": "Minor Average Shear Capacity, V3.Rd",
+          "unit": "kN"
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "D/C Ratio Limit",
+          "unit": ""
+        }
+      ]
+    },
+    "Steel Frame Design Preferences - Eurocode 3-2005": {
+      "row_count": 1,
+      "fields": [
+        {
+          "field_key": "Country",
+          "display_name": "Country",
+          "unit": ""
+        },
+        {
+          "field_key": "CombEqn",
+          "display_name": "Combination Equation",
+          "unit": ""
+        },
+        {
+          "field_key": "RelClass",
+          "display_name": "Reliability Class",
+          "unit": ""
+        },
+        {
+          "field_key": "InteractFM",
+          "display_name": "Interaction Factors Method",
+          "unit": ""
+        },
+        {
+          "field_key": "MultiMethod",
+          "display_name": "Multi-Response Design",
+          "unit": ""
+        },
+        {
+          "field_key": "FrameType",
+          "display_name": "Frame Type",
+          "unit": ""
+        },
+        {
+          "field_key": "BehavFact",
+          "display_name": "Behavior Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "OverStrFact",
+          "display_name": "System Overstrength Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "PDeltaDone",
+          "display_name": "Consider P-Delta Done?",
+          "unit": ""
+        },
+        {
+          "field_key": "Torsion",
+          "display_name": "Consider Torsion?",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaM0",
+          "display_name": "GammaM0",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaM1",
+          "display_name": "GammaM1",
+          "unit": ""
+        },
+        {
+          "field_key": "GammaM2",
+          "display_name": "GammaM2",
+          "unit": ""
+        },
+        {
+          "field_key": "SeismicCode",
+          "display_name": "Ignore Seismic Code?",
+          "unit": ""
+        },
+        {
+          "field_key": "SpSeisLoad",
+          "display_name": "Ignore Special Seismic Load?",
+          "unit": ""
+        },
+        {
+          "field_key": "PlugWelded",
+          "display_name": "Doubler Plate Plug-Welded?",
+          "unit": ""
+        },
+        {
+          "field_key": "CheckDefl",
+          "display_name": "Consider Deflection?",
+          "unit": ""
+        },
+        {
+          "field_key": "DLRat",
+          "display_name": "DL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "SDLAndLLRat",
+          "display_name": "SDL+LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "LLRat",
+          "display_name": "LL Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalRat",
+          "display_name": "Total Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "TotalCamber",
+          "display_name": "Total Camber Limit",
+          "unit": ""
+        },
+        {
+          "field_key": "PatLLF",
+          "display_name": "Pattern Live Load Factor",
+          "unit": ""
+        },
+        {
+          "field_key": "DCLimit",
+          "display_name": "D/C Ratio Limit",
+          "unit": ""
+        },
+        {
+          "field_key": "MaxIter",
+          "display_name": "Maximum Iterations",
+          "unit": ""
+        }
+      ]
+    },
+    "Steel Frame Design Summary - Eurocode 3-2005": {
+      "row_count": 2,
+      "fields": [
+        {
+          "field_key": "Story",
+          "display_name": "Story",
+          "unit": ""
+        },
+        {
+          "field_key": "Label",
+          "display_name": "Label",
+          "unit": ""
+        },
+        {
+          "field_key": "UniqueName",
+          "display_name": "UniqueName",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignType",
+          "display_name": "Design Type",
+          "unit": ""
+        },
+        {
+          "field_key": "DesignSect",
+          "display_name": "Design Section",
+          "unit": ""
+        },
+        {
+          "field_key": "Status",
+          "display_name": "Status",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMCombo",
+          "display_name": "PMM Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "PMMRatio",
+          "display_name": "PMM Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "PRatio",
+          "display_name": "P Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "MMajRatio",
+          "display_name": "M Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "MMinRatio",
+          "display_name": "M Minor Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajCombo",
+          "display_name": "V Major Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMajRatio",
+          "display_name": "V Major Ratio",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinCombo",
+          "display_name": "V Minor Combo",
+          "unit": ""
+        },
+        {
+          "field_key": "VMinRatio",
+          "display_name": "V Minor Ratio",
+          "unit": ""
+        }
+      ]
+    }
+  },
+  "status_message_values": {
+    "Steel Frame Design Summary - Eurocode 3-2005::Status": {
+      "No Message": 2
+    }
+  },
+  "read_errors": {}
+}

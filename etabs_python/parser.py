@@ -45,7 +45,19 @@ def parse_json_payload(data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
     # 1. Groups
     raw_groups = payload.get("create_groups") or payload.get("groups") or []
     if isinstance(raw_groups, list):
-        standard_payload["create_groups"] = [str(g).strip() for g in raw_groups if str(g).strip()]
+        groups_list = []
+        for g in raw_groups:
+            if isinstance(g, dict):
+                name = str(g.get("name") or g.get("group_name", "")).strip()
+                if name:
+                    groups_list.append({"name": name, "color": g.get("color")})
+            elif str(g).strip():
+                groups_list.append(str(g).strip())
+        standard_payload["create_groups"] = groups_list
+    elif isinstance(raw_groups, dict):
+        standard_payload["create_groups"] = [
+            {"name": str(k).strip(), "color": v} for k, v in raw_groups.items() if str(k).strip()
+        ]
     elif isinstance(raw_groups, str):
         standard_payload["create_groups"] = [raw_groups.strip()]
 
