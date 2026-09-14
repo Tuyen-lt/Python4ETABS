@@ -57,6 +57,8 @@ TABLES = {
         [None, None, None, "cm²", "cm⁴", "cm⁴"] + [None] * 8,
         [["B30x60", "C30", "Concrete Rectangular", 1800, 540000, 135000, 1, 1, 1, 1, 0.7, 1, 1, 1],
          ["C50x50", "C30", "Concrete Rectangular", 2500, 520833.3, 520833.3, 1, 1, 1, 1, 1, 1, 1, 1]]),
+    "Frame Section Property Definitions - Concrete Circle": (  # before Rectangular: dims from both must merge
+        ["Name", "Material", "Diameter"], [None, None, "mm"], [["D80", "C30", 800]]),
     "Frame Section Property Definitions - Concrete Rectangular": (
         ["Name", "Material", "Depth", "Width"], [None, None, "mm", "mm"],
         [["B30x60", "C30", 600, 300], ["C50x50", "C30", 500, 500]]),
@@ -80,7 +82,7 @@ TABLES = {
         [["S200", "Shell-Thin", "Slab", "C30", 200, 1, 1, 1, 0.5, 0.5, 0.5, 1, 1, 1, 1]]),
     "Wall Property Definitions - Specified": (
         ["Name", "Modeling Type", "Material", "Wall Thickness"] + MODS_A, [None] * 3 + ["mm"] + [None] * 10,
-        [["W300", "Shell-Thin", "C30", 300] + [1] * 10]),
+        [["W300", "Shell-Thin", "C30", 300, 1, 1, 1, 0.7, 1, 1, 1, 1, 1, 1]]),
     "Element Forces - Beams": (
         ["Story", "Beam", "Unique Name", "Output Case", "Case Type", "Station"] + FORCE_H,
         [None] * 5 + ["m"] + FORCE_U, _beam_rows()),
