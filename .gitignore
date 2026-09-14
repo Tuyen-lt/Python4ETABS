@@ -16,3 +16,4 @@ dist/
 *.edb
 # ETABS exports contain license number and project data
 ETABS_EXPORTED*.xlsx
+/*.xlsx
