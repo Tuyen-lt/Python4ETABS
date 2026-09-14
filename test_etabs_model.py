@@ -12,6 +12,7 @@ def offline():
     elevs, names = [0.0, 3.0, 6.0], ["S1", "S2", "S3"]
     base = -3.0
     assert story_from_elevation(-3.0, elevs, names, base) == "Base"
+    assert story_from_elevation(-3.0, elevs, names, base, base_name="B2") == "B2"
     assert story_from_elevation(-1.0, elevs, names, base) == "S1"
     assert story_from_elevation(0.0, elevs, names, base) == "S1"      # dung cao do tang -> thuoc tang do
     assert story_from_elevation(0.0005, elevs, names, base) == "S1"   # trong dung sai
@@ -39,12 +40,13 @@ def live():
     print("Model:", m.filename, "units:", m.get_units())
 
     st = m.stories()
-    print(f"stories: {len(st)}, base={st.attrs['base_elevation']}, top={st['Story'].iloc[-1]}")
+    print(f"stories: {len(st)}, base={st.attrs['base_name']}@{st.attrs['base_elevation']}, top={st['Story'].iloc[-1]}")
 
     pts = m.points()
-    sample = pts.sample(min(300, len(pts)), random_state=0)
-    mismatch = [(r.UniqueName, r.Z, r.Story) for r in sample.itertuples()
-                if m.story_at(r.Z) != r.Story]
+    sample = pts  # toan bo diem
+    found = m.story_at(sample["Z"])
+    mismatch = [(r.UniqueName, r.Z, r.Story, s) for r, s in zip(sample.itertuples(), found) if s != r.Story]
+    assert m.story_at(float(sample["Z"].iloc[0])) == found[0]
     print(f"story_at vs ETABS Story tren {len(sample)} diem: {len(mismatch)} lech", mismatch[:5])
     assert not mismatch
 
@@ -56,17 +58,35 @@ def live():
     info = m.frame_info(row["UniqueName"])
     print("frame_info:", info)
     assert info["story"] == row["Story"] and info["label"] == row["Label"]
-    assert info["section"] == row["AnalysisSect"] and info["type"] == "Column"
+    assert info["section"] == row["AnalysisSect"] and info["type"] == "Column", info
     assert abs(info["length"] - row["Length"]) < 1.0
     assert m.element_story(row["UniqueName"]) == row["Story"]
 
-    for fn, kw in [(m.frame_forces, {"names": row["UniqueName"]}), (m.pier_forces, {}),
-                   (m.joint_reactions, {})]:
+    _, cases, status, _ = m.sap_model.Analyze.GetCaseStatus()
+    done = [c for c, s in zip(cases, status) if s == 4]  # 4 = Finished
+    if not done:
         try:
-            df = fn(**kw)
-            print(f"{fn.__name__}: {len(df)} rows", df.head(3).to_dict("records"))
+            m.frame_forces(row["UniqueName"])
+            raise AssertionError("chua phan tich ma khong raise")
         except EtabsResultError as e:
-            print(f"{fn.__name__}: {e}")
+            print("noi luc: chua co ket qua phan tich ->", e)
+    else:
+        case = done[0]
+        jr = m.joint_reactions(cases=case)
+        fz = m.sap_model.Results.BaseReact()[6][0]
+        print(f"[{case}] joint_reactions={len(jr)} sum F3={jr['F3'].sum():.1f} BaseReact FZ={fz:.1f}")
+        assert abs(jr["F3"].sum() - fz) <= 1e-6 * abs(fz) + 1
+
+        ff = m.frame_forces(row["UniqueName"], cases=case)
+        m.sap_model.DatabaseTables.SetLoadCasesSelectedForDisplay([case])
+        tb = m.bridge.pull_table("Element Forces - Columns")
+        tb = tb[(tb["UniqueName"] == row["UniqueName"]) & (tb["OutputCase"] == case)]
+        for c in ["P", "V2", "V3", "T", "M2", "M3"]:
+            assert sorted(ff[c].round(0)) == sorted(tb[c].astype(float).round(0)), c
+        print(f"[{case}] frame_forces {row['UniqueName']}: {len(ff)} tram, khop bang Element Forces - Columns")
+
+        pf = m.pier_forces(cases=case)
+        print(f"[{case}] pier_forces={len(pf)}, frame_forces All={len(m.frame_forces(cases=case))}")
     print(f"live OK in {time.time() - t:.1f}s")
 
 

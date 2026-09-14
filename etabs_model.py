@@ -7,6 +7,7 @@ Lop EtabsModel: diem truy cap chinh toi mo hinh ETABS dang mo.
 - Du lieu khoi luong lon / ghi du lieu: self.bridge (EtabsDataBridge)
 """
 from bisect import bisect_left
+from numbers import Real
 from typing import Iterable, Optional, Union, List, Dict, Any
 
 import pandas as pd
@@ -111,16 +112,22 @@ class EtabsModel:
         df = pd.DataFrame({"Story": list(names), "Elevation": list(elevs), "Height": list(heights)})
         df = df.sort_values("Elevation", ignore_index=True)
         df.attrs["base_elevation"] = base
+        bs = self.bridge.pull_table("Tower and Base Story Definitions")
+        df.attrs["base_name"] = bs["BSName"].iloc[0] if "BSName" in bs.columns and len(bs) else "Base"
         return df
 
-    def story_at(self, z: float, tol: float = 1e-3) -> Optional[str]:
+    def story_at(self, z: Union[float, Iterable[float]], tol: float = 1e-3):
         """
         Xac dinh tang chua cao do z theo quy uoc ETABS: tang X chua (cao do tang duoi, cao do tang X].
-        Tra ve 'Base' neu z tai cao do chan cong trinh, None neu nam ngoai mo hinh.
+        Tra ve ten base story (VD 'Base') neu z tai cao do chan cong trinh, None neu nam ngoai mo hinh.
+        z la danh sach -> tra ve list (chi doc bang tang 1 lan, nen dung cach nay khi xu ly nhieu diem).
         """
         st = self.stories()
-        return story_from_elevation(z, st["Elevation"].tolist(), st["Story"].tolist(),
-                                    st.attrs["base_elevation"], tol)
+        args = (st["Elevation"].tolist(), st["Story"].tolist(), st.attrs["base_elevation"], tol,
+                st.attrs["base_name"])
+        if isinstance(z, Real):
+            return story_from_elevation(z, *args)
+        return [story_from_elevation(v, *args) for v in z]
 
     def element_story(self, name: str, kind: str = "frame") -> str:
         """
@@ -250,12 +257,12 @@ class EtabsModel:
 
 
 def story_from_elevation(z: float, elevations: List[float], names: List[str],
-                         base: float, tol: float = 1e-3) -> Optional[str]:
+                         base: float, tol: float = 1e-3, base_name: str = "Base") -> Optional[str]:
     """
     elevations/names sap xep tu duoi len. Tang X chua z trong (cao do tang duoi, cao do tang X].
     """
     if abs(z - base) <= tol:
-        return "Base"
+        return base_name
     if z < base or z > elevations[-1] + tol:
         return None
     return names[bisect_left(elevations, z - tol)]
