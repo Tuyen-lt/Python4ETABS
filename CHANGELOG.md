@@ -1,6 +1,6 @@
 # Changelog - etabs_python
 
-## [3.1.1] - 2026-09-14
+## [3.2.0] - 2026-09-15
 
 ### Added
 - **Operation column_layout_tables trong etabs_python.ops_model**:

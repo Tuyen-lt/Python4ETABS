@@ -37,7 +37,7 @@ from .units import Units
 
 JOB_TTL_SECONDS = 3600
 
-app = FastAPI(title="ETABS Core Engine", version="3.1.0",
+app = FastAPI(title="ETABS Core Engine", version="3.2.0",
               description="Run etabs_python operations on a live ETABS model or an ETABS Excel export.")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
