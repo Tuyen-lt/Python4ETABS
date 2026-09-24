@@ -26,4 +26,4 @@ Documentation: [docs/ENGINE_GUIDE.md](docs/ENGINE_GUIDE.md) (usage, operations, 
 
 ## License
 
-AGPL-3.0, see [LICENSE](LICENSE).
+Apache-2.0, see [LICENSE](LICENSE).
